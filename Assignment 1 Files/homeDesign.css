@@ -1,0 +1,83 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2em 12em;
+}
+
+.menu {
+  flex: 1;
+}
+
+.extraMenuLinks {
+  display: flex;
+  gap: 30px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.heroSection {
+  overflow: hidden;
+  height: 650px;
+  position: relative;
+}
+.heroSection img {
+  position: absolute;
+  bottom: -200px;
+  top: 0;
+  width: 100%;
+  height: auto;
+}
+
+.dialogBox {
+  position: absolute;
+  top: 60%; /* Adjust the vertical position */
+  left: 50%; /* Adjust the horizontal position */
+  transform: translate(-140%, -70%); /* Center the box */
+  background: rgba(21, 59, 94); /* Semi-transparent background */
+  padding: 3em;
+  width: 250px; /* Fixed width */
+  height: 300px; /* Height adjusts based on content */
+  max-height: 80%; /* Optional: limits height to ensure it doesn't overflow */
+  overflow-y: auto; /* Adds scroll if content exceeds max-height */
+}
+
+.dialogue1 {
+  color: #ffffff;
+  margin: 0 0 4px 0;
+}
+.dialogue2 {
+  color: #ffffff;
+  font-size: 2rem;
+  margin: 0 0 4px 0;
+}
+.dialogue3 {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: #e5d947;
+  margin: 0 0 1.5rem 0;
+}
+.dialogBox .box {
+  width: 240px;
+  height: 40px;
+  margin: 0 0 1.5rem 0;
+  background: #ffffff;
+}
+
+.dialogBox .signUp {
+  width: 150px;
+  height: 30px;
+  margin-bottom: 10px;
+  padding: 0.5rem;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 30px;
+  background: #f9dd14;
+}
