@@ -3,6 +3,11 @@ body {
   padding: 0;
 }
 
+@font-face {
+  font-family: 'Latica Regular';
+  src: url('/LaticaRegular.ttf') format('truetype');
+}
+
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -28,6 +33,7 @@ a {
   height: 650px;
   position: relative;
 }
+
 .heroSection img {
   position: absolute;
   bottom: -200px;
@@ -38,15 +44,15 @@ a {
 
 .dialogBox {
   position: absolute;
-  top: 60%; /* Adjust the vertical position */
-  left: 50%; /* Adjust the horizontal position */
-  transform: translate(-140%, -70%); /* Center the box */
-  background: rgba(21, 59, 94); /* Semi-transparent background */
+  top: 60%;
+  left: 50%;
+  transform: translate(-140%, -70%);
+  background: rgba(21, 59, 94);
   padding: 3em;
-  width: 250px; /* Fixed width */
-  height: 300px; /* Height adjusts based on content */
-  max-height: 80%; /* Optional: limits height to ensure it doesn't overflow */
-  overflow-y: auto; /* Adds scroll if content exceeds max-height */
+  width: 250px;
+  height: 300px;
+  max-height: 80%;
+  overflow-y: auto;
 }
 
 .dialogue1 {
@@ -57,6 +63,7 @@ a {
   color: #ffffff;
   font-size: 2rem;
   margin: 0 0 4px 0;
+  font-family: 'Latica Light', open-sans;
 }
 .dialogue3 {
   font-size: 0.8rem;
@@ -64,20 +71,157 @@ a {
   color: #e5d947;
   margin: 0 0 1.5rem 0;
 }
-.dialogBox .box {
+.box {
   width: 240px;
   height: 40px;
   margin: 0 0 1.5rem 0;
   background: #ffffff;
 }
 
-.dialogBox .signUp {
+.signUp {
   width: 150px;
   height: 30px;
-  margin-bottom: 10px;
-  padding: 0.5rem;
   text-align: center;
-  vertical-align: middle;
-  line-height: 30px;
   background: #f9dd14;
+}
+
+.featureSection {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5em;
+  align-items: center;
+  margin: 6em 14em;
+}
+
+.featureContent {
+  font-size: 0.9rem;
+}
+
+.highlights {
+  background-color: #f4f4f4;
+  padding: 8em 6em;
+  text-align: center;
+}
+
+.prices {
+  position: relative;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Align content at the top */
+  padding-top: 2rem; /* Adjust padding as needed to create space from the top */
+  background-attachment: fixed;
+  background-image: url('images/glasses.png');
+  background-position: center;
+  background-size: cover;
+  background-color: rgba(248, 247, 216, 0.7);
+  row-gap: 0.5rem; /* Adjusts space between the heading and paragraph */
+  text-align: center;
+  filter: grayscale(100%);
+}
+
+.prices::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.7
+  ); /* #D4D4D4 color with 50% opacity */
+  z-index: 1;
+  pointer-events: none; /* Allows interaction with content beneath the layer */
+}
+
+.prices .title {
+  font-size: 1.3rem; /* Adjust size as needed */
+  margin: 0;
+  z-index: 2; /* Ensure text is above the overlay */
+  color: black;
+}
+
+.prices .sub-title {
+  font-size: 0.8rem; /* Adjust size as needed */
+  margin: 10px 0 50px 0;
+  z-index: 2; /* Ensure text is above the overlay */
+  color: #989898;
+}
+
+.plans-row {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  color: black;
+}
+
+/* Flexbox items */
+.plans-col {
+  position: relative;
+  background-color: white;
+  padding: 20px;
+  width: 250px;
+  height: 450px;
+  overflow: hidden;
+}
+
+.plans-col::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: 20px 20px;
+  opacity: 0.3;
+  background-image: linear-gradient(to top, #dcdcdc 1px, transparent 1px),
+    linear-gradient(to right, #dcdcdc 1px, transparent 1px),
+    linear-gradient(
+      45deg,
+      transparent 14px,
+      #dcdcdc 14px,
+      #dcdcdc 15px,
+      transparent 15px
+    ),
+    linear-gradient(
+      315deg,
+      transparent 14px,
+      #dcdcdc 14px,
+      #dcdcdc 15px,
+      transparent 15px
+    ),
+    linear-gradient(
+      0deg,
+      transparent 11px,
+      #dcdcdc 11px,
+      #dcdcdc 12px,
+      transparent 12px
+    ),
+    linear-gradient(
+      90deg,
+      transparent 10px,
+      #dcdcdc 10px,
+      #dcdcdc 11px,
+      transparent 11px
+    );
+  z-index: 1;
+  /* background-repeat: no-repeat; */
+  pointer-events: none;
+  background-position: center center;
+}
+
+.plans-col p {
+  /* margin: 10px 0; */
+  padding: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+button {
+  position: relative;
+  z-index: 2;
 }
