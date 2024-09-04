@@ -8,24 +8,45 @@ body {
   src: url('fonts/RoomThin.ttf') format('truetype');
 }
 
+@font-face {
+  font-family: 'Arial Greek Regular';
+  src: url('fonts/ArialGreekRegular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Mangueiraalt Regular';
+  src: url('fonts/Mangueira-regular.otf') format('truetype');
+}
+@font-face {
+  font-family: 'TT Regular';
+  src: url('fonts/TTRegular.otf') format('truetype');
+}
+
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2em 12em;
+  padding: 1.5em 16em;
 }
 
 .menu {
   flex: 1;
+  font-family: 'Room Thin', open-sans;
 }
 
 .extraMenuLinks {
   display: flex;
   gap: 30px;
+  font-family: 'Arial Greek Regular', open-sans;
+  font-size: 0.8rem;
 }
 
-a {
+a:link {
   text-decoration: none;
+  color: #dcdcdc;
+}
+a:visited {
+  text-decoration: none;
+  color: #dcdcdc;
 }
 
 .heroSection {
@@ -57,47 +78,71 @@ a {
 
 .dialogue1 {
   color: #ffffff;
-  margin: 0 0 4px 0;
-  font-family: 'Room Thin', open-sans;
+  font-family: 'Mangueiraalt Regular', open-sans;
+  line-height: 0rem;
+  font-size: 0.8rem;
 }
 .dialogue2 {
   color: #ffffff;
   font-size: 2rem;
-  margin: 0 0 4px 0;
-  font-family: 'Room Thin', open-sans;
+  font-family: 'Mangueiraalt Regular', open-sans;
+  line-height: 2rem;
+  margin-top: 1px;
+  margin-bottom: 1px;
 }
 .dialogue3 {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-style: italic;
   color: #e5d947;
-  margin: 0 0 1.5rem 0;
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
   font-family: 'Arial', open-sans;
+  line-height: 0rem;
 }
 .box {
   width: 240px;
   height: 40px;
   margin: 0 0 1.5rem 0;
   background: #ffffff;
+  padding: 0;
+  border: none;
 }
 
 .signUp {
   width: 150px;
-  height: 30px;
+  height: 40px;
   text-align: center;
   background: #f9dd14;
-  font-family: 'Room Thin', open-sans;
+  font-family: 'Mangueiraalt Regular', open-sans;
+  padding: 0;
+  border: none;
+  font-size: 0.6rem;
+  letter-spacing: 2px;
+}
+
+.symbols {
+  font-family: 'Arial Greek Regular', open-sans;
 }
 
 .featureSection {
   display: flex;
   justify-content: space-between;
-  gap: 1.5em;
+  gap: 3.5rem;
   align-items: center;
-  margin: 6em 14em;
+  margin: 7em 15em;
+  /* padding-right: 1.5rem; */
 }
 
 .featureContent {
-  font-size: 0.9rem;
+  font-size: 11.5px;
+  font-family: 'Arial Greek Regular', open-sans;
+  color: grey;
+  line-height: 20px;
+}
+
+.feature-title {
+  font-family: 'Mangueiraalt Regular', open-sans;
+  line-height: 10px;
 }
 
 .highlights {
@@ -106,6 +151,20 @@ a {
   text-align: center;
 }
 
+.quote {
+  font-family: 'Mangueiraalt Regular', open-sans;
+  margin-bottom: 0rem;
+}
+
+.writer {
+  font-family: 'Arial Greek Regular', open-sans;
+  font-size: 13px;
+  margin-top: 0.4rem;
+}
+
+.ceo {
+  color: grey;
+}
 .prices {
   position: relative;
   display: flex;
@@ -113,15 +172,16 @@ a {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start; /* Align content at the top */
-  padding-top: 2rem; /* Adjust padding as needed to create space from the top */
+  padding-top: 3.5rem; /* Adjust padding as needed to create space from the top */
   background-attachment: fixed;
   background-image: url('images/glasses.png');
   background-position: center;
   background-size: cover;
   background-color: rgba(248, 247, 216, 0.7);
-  row-gap: 0.5rem; /* Adjusts space between the heading and paragraph */
+  /* row-gap: 0.5px;  */
   text-align: center;
   filter: grayscale(100%);
+  font-family: 'Mangueiraalt Regular', open-sans;
 }
 
 .prices::before {
@@ -143,14 +203,15 @@ a {
 
 .prices .title {
   font-size: 1.3rem; /* Adjust size as needed */
+  margin-bottom: 1px;
   margin: 0;
-  z-index: 2; /* Ensure text is above the overlay */
+  z-index: 2; 
   color: black;
 }
 
 .prices .sub-title {
   font-size: 0.8rem; /* Adjust size as needed */
-  margin: 10px 0 50px 0;
+  margin: 10px 0 5rem 0;
   z-index: 2; /* Ensure text is above the overlay */
   color: #989898;
 }
@@ -158,7 +219,7 @@ a {
 .plans-row {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 2.5rem;
   color: black;
 }
 
@@ -170,6 +231,7 @@ a {
   width: 250px;
   height: 450px;
   overflow: hidden;
+  font-family: "TT Regular", open-sans;
 }
 
 .plans-col::before {
@@ -217,13 +279,23 @@ a {
   background-position: center center;
 }
 
-.plans-col p {
-  /* margin: 10px 0; */
-  padding: 10px;
-  position: relative;
-  z-index: 2;
+.plans-title {
+  font-size: 0.9rem;
+  margin-top: 40px;
+  margin-bottom: 24px;
 }
 
+.plans-col p {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 1.5rem;
+}
+
+.plans-feature {
+  font-size: 0.8rem;
+  margin-bottom: 2rem;
+  color: #5F5F5F;
+}
 button {
   position: relative;
   z-index: 2;
