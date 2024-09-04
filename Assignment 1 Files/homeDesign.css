@@ -4,8 +4,8 @@ body {
 }
 
 @font-face {
-  font-family: 'Latica Regular';
-  src: url('/LaticaRegular.ttf') format('truetype');
+  font-family: 'Room Thin';
+  src: url('fonts/RoomThin.ttf') format('truetype');
 }
 
 .navbar {
@@ -58,18 +58,20 @@ a {
 .dialogue1 {
   color: #ffffff;
   margin: 0 0 4px 0;
+  font-family: 'Room Thin', open-sans;
 }
 .dialogue2 {
   color: #ffffff;
   font-size: 2rem;
   margin: 0 0 4px 0;
-  font-family: 'Latica Light', open-sans;
+  font-family: 'Room Thin', open-sans;
 }
 .dialogue3 {
   font-size: 0.8rem;
   font-style: italic;
   color: #e5d947;
   margin: 0 0 1.5rem 0;
+  font-family: 'Arial', open-sans;
 }
 .box {
   width: 240px;
@@ -83,6 +85,7 @@ a {
   height: 30px;
   text-align: center;
   background: #f9dd14;
+  font-family: 'Room Thin', open-sans;
 }
 
 .featureSection {
