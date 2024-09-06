@@ -170,8 +170,8 @@ a:visited {
   min-height: 100vh;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start; /* Align content at the top */
-  padding-top: 3.5rem; /* Adjust padding as needed to create space from the top */
+  justify-content: flex-start;
+  padding-top: 3.5rem;
   text-align: center;
   font-family: 'Mangueiraalt Regular', open-sans;
 }
@@ -200,13 +200,13 @@ a:visited {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.7); /* semi-transparent white */
+  background-color: rgba(255, 255, 255, 0.7);
   z-index: -1;
   filter: grayscale(100%);
   pointer-events: none;
 }
 .prices .title {
-  font-size: 1.3rem; /* Adjust size as needed */
+  font-size: 1.3rem;
   margin-bottom: 1px;
   margin: 0;
   z-index: 2;
@@ -214,9 +214,9 @@ a:visited {
 }
 
 .prices .sub-title {
-  font-size: 0.8rem; /* Adjust size as needed */
+  font-size: 0.8rem;
   margin: 10px 0 5rem 0;
-  z-index: 2; /* Ensure text is above the overlay */
+  z-index: 2;
   color: #989898;
 }
 
@@ -227,7 +227,6 @@ a:visited {
   color: black;
 }
 
-/* Flexbox items */
 .plans-col {
   position: relative;
   background-color: white;
@@ -319,12 +318,12 @@ a:visited {
 }
 .services {
   position: relative;
-  width: 100%; /* Set the desired width */
-  height: 450px; /* Define the visible height (container height) */
-  overflow: hidden; /* Crops the image outside of the container */
+  width: 100%;
+  height: 450px;
+  overflow: hidden;
 }
 .services-background {
-  position: absolute; /* Absolute positioning to layer the background */
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -332,9 +331,9 @@ a:visited {
 }
 
 .services-background img {
-  width: 100%; /* Ensure the image covers the container horizontally */
+  width: 100%;
   height: auto;
-  margin-top: -250px; /* Crop 50px from the top */
+  margin-top: -250px;
 }
 
 .services-background::before {
@@ -344,19 +343,18 @@ a:visited {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(20, 60, 92, 0.85); /* Transparent #214762 color */
-  z-index: 1; /* Ensures the overlay is on top of the image */
-  pointer-events: none; /* Ensures the overlay doesn't interfere with clicks */
+  background-color: rgba(20, 60, 92, 0.85);
+  z-index: 1;
+  pointer-events: none;
 }
 
 .services-quote,
 .services-subQuote,
 .try {
   position: relative;
-  z-index: 2; /* Ensures the button and text are above the overlay */
-  color: white; /* Ensure text is visible */
+  z-index: 2;
+  color: white;
   text-align: center;
-  /* margin: 10px 0; */
 }
 
 .services-quote {
@@ -367,8 +365,8 @@ a:visited {
 }
 
 .services-subQuote {
-  margin-top: 2px; /* Remove top margin */
-  padding-top: 0; /* Ensure no padding is added */
+  margin-top: 2px;
+  padding-top: 0;
   padding-bottom: 1rem;
   font-size: 11.5px;
   font-family: 'Arial Greek Regular', open-sans;
@@ -384,21 +382,22 @@ a:visited {
   font-size: 0.8rem;
   letter-spacing: 1px;
   z-index: 2;
-  display: block; /* Ensure the button is treated as a block element */
-  margin: 20px auto 0 auto; /* Center the button horizontally */
-  line-height: 40px; /* Vertically center the text inside the button */
+  display: block;
+  margin: 20px auto 0 auto;
+  line-height: 40px;
   color: black;
 }
 
 .footer {
-  width: 100%; 
+  width: 100%;
   height: 250px;
   background-color: #1b232f;
   margin: 0;
-  padding: 20px; 
+  padding: 20px;
   box-sizing: border-box;
 }
-.footer-title, .address {
+.footer-title,
+.address {
   color: white;
   text-align: center;
 }
@@ -417,14 +416,14 @@ a:visited {
 }
 
 .socials {
-  display: flex; /* Use flexbox to align items */
-  justify-content: center; /* Center items horizontally */
-  gap: 2.5rem; /* Optional: Space between icons */
-  margin-top: 2rem; 
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  margin-top: 2rem;
 }
 
 .socials img {
-  width: 25px; /* Set a fixed size for icons */
-  height: 25px; /* Maintain aspect ratio */
-  object-fit: contain; /* Ensure image fits within the defined size */
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
 }
