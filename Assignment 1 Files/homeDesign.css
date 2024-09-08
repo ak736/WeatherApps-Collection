@@ -88,16 +88,16 @@ a:visited {
   font-family: 'Mangueiraalt Regular', open-sans;
   line-height: 2rem;
   margin-top: 1px;
-  margin-bottom: 1px;
+  margin-bottom: 0;
 }
 .dialogue3 {
   font-size: 0.7rem;
   font-style: italic;
   color: #e5d947;
-  margin-top: 1.5rem;
+  margin-top: 8px;
   margin-bottom: 2rem;
   font-family: 'Arial', open-sans;
-  line-height: 0rem;
+  /* line-height: 0rem; */
 }
 .box {
   width: 240px;
@@ -406,10 +406,11 @@ a:visited {
   margin-top: 4.2rem;
   font-size: 0.9rem;
   font-family: 'Mangueiraalt Regular', open-sans;
+  margin-bottom: 4px;
 }
 
 .address {
-  margin-top: 5px;
+  margin-top: 0;
   font-size: 0.65rem;
   color: #b1b1b1;
   font-family: 'Arial Greek Regular', open-sans;
@@ -426,4 +427,17 @@ a:visited {
   width: 25px;
   height: 25px;
   object-fit: contain;
+}
+
+#about-section,
+#services-section,
+#project-section {
+  height: 30vh;
+  font-size: 2rem;
+  border-bottom: 1.5px solid black;
+  scroll-behavior: smooth;
+}
+
+html {
+  scroll-behavior: smooth;
 }
