@@ -29,7 +29,6 @@ body {
 }
 
 .menu {
-  flex: 1;
   font-family: 'Room Thin', open-sans;
 }
 
@@ -56,11 +55,7 @@ a:visited {
 }
 
 .heroSection img {
-  position: absolute;
-  bottom: -200px;
-  top: 0;
   width: 100%;
-  height: auto;
 }
 
 .dialogBox {
@@ -72,14 +67,12 @@ a:visited {
   padding: 3em;
   width: 250px;
   height: 300px;
-  max-height: 80%;
-  overflow-y: auto;
 }
 
 .dialogue1 {
   color: #ffffff;
   font-family: 'Mangueiraalt Regular', open-sans;
-  line-height: 0rem;
+  margin-bottom: 2px;
   font-size: 0.8rem;
 }
 .dialogue2 {
@@ -95,23 +88,20 @@ a:visited {
   font-style: italic;
   color: #e5d947;
   margin-top: 8px;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   font-family: 'Arial', open-sans;
-  /* line-height: 0rem; */
 }
 .box {
   width: 240px;
   height: 40px;
   margin: 0 0 1.5rem 0;
   background: #ffffff;
-  padding: 0;
   border: none;
 }
 
 .signUp {
   width: 150px;
   height: 40px;
-  text-align: center;
   background: #f9dd14;
   font-family: 'Mangueiraalt Regular', open-sans;
   padding: 0;
@@ -164,13 +154,11 @@ a:visited {
 .ceo {
   color: grey;
 }
+
 .prices {
   position: relative;
-  display: flex;
   min-height: 100vh;
-  flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
   padding-top: 3.5rem;
   text-align: center;
   font-family: 'Mangueiraalt Regular', open-sans;
@@ -187,9 +175,7 @@ a:visited {
   background-image: url('images/glasses.png');
   background-position: center;
   background-size: cover;
-  text-align: center;
   z-index: -1;
-  pointer-events: none;
   filter: grayscale(100%);
 }
 
@@ -202,21 +188,16 @@ a:visited {
   height: 100%;
   background-color: rgba(255, 255, 255, 0.7);
   z-index: -1;
-  filter: grayscale(100%);
-  pointer-events: none;
 }
 .prices .title {
   font-size: 1.3rem;
   margin-bottom: 1px;
   margin: 0;
-  z-index: 2;
-  color: black;
 }
 
 .prices .sub-title {
   font-size: 0.8rem;
   margin: 10px 0 5rem 0;
-  z-index: 2;
   color: #989898;
 }
 
@@ -224,7 +205,6 @@ a:visited {
   display: flex;
   justify-content: center;
   gap: 2.5rem;
-  color: black;
 }
 
 .plans-col {
@@ -232,7 +212,7 @@ a:visited {
   background-color: white;
   padding: 20px;
   width: 250px;
-  height: 450px;
+  height: 435px;
   overflow: hidden;
   font-family: 'TT Regular', open-sans;
 }
@@ -277,36 +257,36 @@ a:visited {
       transparent 11px
     );
   z-index: 1;
-  pointer-events: none;
   background-position: center center;
 }
 
 .plans-title {
   font-size: 0.9rem;
   margin-top: 40px;
-  margin-bottom: 24px;
 }
 
 .plans-col p {
   position: relative;
   z-index: 2;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem;
 }
 
 .plans-feature {
   font-size: 0.8rem;
-  margin-bottom: 2rem;
+  margin-top: 1.5rem;
   color: #5f5f5f;
 }
 .subscription {
   font-family: 'Arial Greek Regular', open-sans;
   font-size: 1.5rem;
+  margin-top: 3.3rem;
 }
 .buy-now {
+  margin-top: 0.5rem;
   position: relative;
   z-index: 2;
   width: 120px;
-  height: 50px;
+  height: 55px;
   text-align: center;
   background-color: rgba(21, 59, 94);
   font-family: 'Mangueiraalt Regular', open-sans;
@@ -377,11 +357,9 @@ a:visited {
   text-align: center;
   background: #f9dd14;
   font-family: 'Mangueiraalt Regular', open-sans;
-  padding: 0;
   border: none;
   font-size: 0.8rem;
   letter-spacing: 1px;
-  z-index: 2;
   display: block;
   margin: 20px auto 0 auto;
   line-height: 40px;
@@ -419,14 +397,12 @@ a:visited {
 .socials {
   display: flex;
   justify-content: center;
-  gap: 2.5rem;
+  gap: 2rem;
   margin-top: 2rem;
 }
 
 .socials img {
-  width: 25px;
-  height: 25px;
-  object-fit: contain;
+  width: 28px;
 }
 
 #about-section,
