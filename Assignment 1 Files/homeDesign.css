@@ -20,6 +20,10 @@ body {
   font-family: 'TT Regular';
   src: url('fonts/TTRegular.otf') format('truetype');
 }
+@font-face {
+  font-family: 'TodaySB Light';
+  src: url('fonts/TodaySBLight.otf') format('truetype');
+}
 
 .navbar {
   display: flex;
@@ -112,7 +116,7 @@ a:visited {
 }
 
 .symbols {
-  font-family: 'Arial Greek Regular', open-sans;
+  font-family: 'TodaySB Light', open-sans;
 }
 
 .featureSection {
@@ -142,7 +146,7 @@ a:visited {
 }
 
 .quote {
-  font-family: 'Mangueiraalt Regular', open-sans;
+  font-family: 'TodaySB Light', open-sans;
   margin-bottom: 0rem;
 }
 
@@ -158,7 +162,7 @@ a:visited {
 
 .prices {
   position: relative;
-  min-height: 100vh;
+  height: 43.75rem;
   align-items: center;
   padding-top: 3.5rem;
   text-align: center;
@@ -198,7 +202,7 @@ a:visited {
 
 .prices .sub-title {
   font-size: 0.8rem;
-  margin: 10px 0 5rem 0;
+  margin: 10px 0 80px 0;
   color: #989898;
 }
 
@@ -214,7 +218,6 @@ a:visited {
   padding: 20px;
   width: 250px;
   height: 435px;
-  overflow: hidden;
   font-family: 'TT Regular', open-sans;
 }
 
@@ -257,7 +260,6 @@ a:visited {
       #dcdcdc 11px,
       transparent 11px
     );
-  z-index: 1;
   background-position: center center;
 }
 
@@ -285,13 +287,12 @@ a:visited {
 .buy-now {
   margin-top: 0.5rem;
   position: relative;
-  z-index: 2;
+  z-index: 1;
   width: 120px;
   height: 55px;
   text-align: center;
   background-color: rgba(21, 59, 94);
   font-family: 'Mangueiraalt Regular', open-sans;
-  padding: 0;
   border: none;
   font-size: 0.7rem;
   letter-spacing: 2px;
@@ -299,34 +300,24 @@ a:visited {
 }
 .services {
   position: relative;
-  width: 100%;
   height: 450px;
   overflow: hidden;
 }
 .services-background {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
 }
 
 .services-background img {
   width: 100%;
-  height: auto;
   margin-top: -250px;
 }
 
 .services-background::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(20, 60, 92, 0.85);
-  z-index: 1;
-  pointer-events: none;
 }
 
 .services-quote,
@@ -347,7 +338,6 @@ a:visited {
 
 .services-subQuote {
   margin-top: 2px;
-  padding-top: 0;
   padding-bottom: 1rem;
   font-size: 11.5px;
   font-family: 'Arial Greek Regular', open-sans;
@@ -371,8 +361,7 @@ a:visited {
   width: 100%;
   height: 250px;
   background-color: #1b232f;
-  margin: 0;
-  padding: 20px;
+  padding: 17px;
   box-sizing: border-box;
 }
 .footer-title,
