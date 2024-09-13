@@ -12,14 +12,17 @@ body {
   font-family: 'Arial Greek Regular';
   src: url('fonts/ArialGreekRegular.ttf') format('truetype');
 }
+
 @font-face {
   font-family: 'Mangueiraalt Regular';
   src: url('fonts/Mangueira-regular.otf') format('truetype');
 }
+
 @font-face {
   font-family: 'TT Regular';
   src: url('fonts/TTRegular.otf') format('truetype');
 }
+
 @font-face {
   font-family: 'TodaySB Light';
   src: url('fonts/TodaySBLight.otf') format('truetype');
