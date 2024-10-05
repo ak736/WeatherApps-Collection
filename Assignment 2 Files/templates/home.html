@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/home.css') }}"
+    />
+
+    <title>Weather App</title>
+  </head>
+  <body>
+    <div class="weather">
+      <div class="weather-search">
+        <div class="title">Weather Search</div>
+        <div class="sub-title">Fill out the form to get weather info !</div>
+      </div>
+      <div class="weather-form">
+        <form>
+          <label for="Street">Street</label> <br />
+          <input type="text" name="street" id="street" class="full-width" />
+          <br />
+          <div class="row">
+            <div class="column">
+              <label for="City">City</label><br />
+              <input type="text" name="city" id="city" />
+            </div>
+            <div class="column">
+              <label for="state">State</label><br />
+              <select id="state" name="state">
+                <option value="">Select your state</option>
+              </select>
+            </div>
+          </div>
+          <hr class="styled-hr" />
+          <div class="location-detect">
+            <p>Want us to auto-detect your location? </p>
+            <label for="auto-detect" class="check-here">Check here</label>
+            <input type="checkbox" id="auto-detect" class="small-checkbox" />
+          </div>
+          <div class="buttons-footer">
+            <button type="submit" class="btn submit-btn">SUBMIT</button>
+            <button type="reset" class="btn clear-btn">CLEAR</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>

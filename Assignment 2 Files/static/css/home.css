@@ -1,0 +1,116 @@
+body {
+  margin: 0;
+  padding: 0;
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e4e4e4;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.weather {
+  height: 50px;
+  width: 400px;
+}
+
+.title {
+  color: #515156;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.sub-title{
+  color: #656667;
+}
+.weather-search {
+  display: flex;
+  flex-direction: column;
+  padding: 30px 15px 15px 20px;
+
+  gap: 1rem;
+  background-image: url('../images/banner.jpg'); /* Relative path */
+  background-size: cover;
+  /* background-position: 80px 110px; */
+  position: relative;
+}
+
+.weather-form {
+  background-color: #fefefe;
+  padding: 20px 20px 15px 20px;
+}
+
+/* Full width for the Street input */
+.full-width {
+    width: 352px;
+    margin-bottom: 15px; /* Adjust the space below the Street input */
+  }
+  
+  /* Flexbox for the row containing City and State */
+  .row {
+    display: flex;
+    gap: 15px; /* Space between City and State */
+  }
+  
+  /* Make both City and State columns take equal space */
+  .column {
+    flex: 1;
+  }
+  
+  /* Add full width to inputs/selects inside columns */
+  .column input,
+  .column select {
+    width: 100%;
+  }
+
+.styled-hr {
+    border: none; /* Remove default border */
+    border-top: 1px solid #ccc; /* Add a thin grey line */
+    margin: 20px 0 0 0; /* Add space above and below the line */
+    width: 100%; 
+}
+
+.location-detect {
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #2e5aa3;
+  }
+.check-here {
+    margin-left: 5px;
+}
+.small-checkbox {
+  transform: scale(0.8);
+  margin-left: 0px;
+}
+
+.button-footer {
+    display: flex;
+    gap: 20px; /* Space between the buttons */
+    margin-top: 20px; /* Space above the buttons */
+  }
+
+.btn {
+    padding: 10px 25px;
+    font-size: 15px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    letter-spacing: 1px;
+    /* font-weight: bold; */
+    /* box-shadow: 0 5px 0 rgba(0, 0, 0, 0.2);  */
+  }
+  
+  /* Submit button styles */
+  .submit-btn {
+    background-color: #4f6fad; /* Blue color */
+    border-bottom: 3px solid #364c77; /* Darker shade for bottom shadow effect */
+  }
+  
+  /* Clear button styles */
+  .clear-btn {
+    background-color: #f5b707; /* Orange color */
+    border-bottom: 3px solid #f28401; /* Darker shade for bottom shadow effect */
+  }
