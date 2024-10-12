@@ -1,64 +1,80 @@
 import requests
 import os
 from dotenv import load_dotenv
-import ipinfo
+import logging
 
 load_dotenv()
 
-# def get_geoloc():
-    # hostname = socket.gethostname()
-    # IPAddress = socket.gethostbyname(hostname)
-    # token = "a299ed4e40e3c5"
-    # handler = ipinfo.getHandler(token)
-    # details = handler.getDetails(handler)
-    # print(details.loc)
-    # url = f"https://ipinfo.io/{IPAddress}/loc?token={token}"
-    # response_geo = requests.get(url)
-    # print(response_geo)
-    # url = f"https://ipinfo.io/json?token={token}"
-    # response_geo = requests.get(url)
-    # if response_geo.status_code == 200:
-    #     data = response_geo.json()
-    #     loc = data['loc']  
-    #     lat, lon = loc.split(',')
-    #     return float(lat), float(lon)
-    # else:
-    #     print("Error fetching geolocation.")
-    #     return None, None
+def get_geoloc_from_ip(ip=None):
+    token = os.getenv('IP_INFO_TOKEN')
+    url = f"https://ipinfo.io/{ip}/json" if ip else "https://ipinfo.io/json"
+    headers = {'Authorization': f'Bearer {token}'} if token else {}
+    response = requests.get(url, headers=headers)
+    logging.debug(f"IPInfo API Response Status: {response.status_code}")
+    logging.debug(f"IPInfo API Response Body: {response.text}")
 
-def get_geoloc():
-    token = os.getenv('IP_INFO_TOKEN')  # Replace with your IPInfo token
-    handler = ipinfo.getHandler(token)
-    details = handler.getDetails()  # Uses the request's IP address
-    loc = details.loc  # 'loc' is a string in "lat,long" format
-    lat, lon = loc.split(',')
-    return float(lat), float(lon)
+    if response.status_code != 200:
+        raise Exception("Failed to retrieve location from IP.")
+    data = response.json()
+    loc = data.get('loc')
+    if not loc:
+        raise Exception("Location data not found in IPInfo response.")
+    try:
+        lat, lon = map(float, loc.split(','))
+        return lat, lon
+    except ValueError:
+        raise Exception("Invalid location format received from IPInfo.")
 
-def get_weather():
-    lat, lon = get_geoloc()
+def get_location_info_from_ip(ip=None):
+    token = os.getenv('IP_INFO_TOKEN')
+    url = f"https://ipinfo.io/{ip}/json" if ip else "https://ipinfo.io/json"
+    headers = {'Authorization': f'Bearer {token}'} if token else {}
+    response = requests.get(url, headers=headers)
+    logging.debug(f"IPInfo API Response Status: {response.status_code}")
+    logging.debug(f"IPInfo API Response Body: {response.text}")
+
+    if response.status_code != 200:
+        raise Exception("Failed to retrieve location from IP.")
+    data = response.json()
+    city = data.get('city')
+    region = data.get('region')
+    country = data.get('country')
+    postal = data.get('postal')
+    return {'city': city, 'region': region, 'country': country, 'postal': postal}
+
+def get_geoloc_from_address(street, city, state):
+    api_key = os.getenv('GEOCODING_API_KEY')
+    address = f"{street}, {city}, {state}, USA"
+    url = "https://maps.googleapis.com/maps/api/geocode/json"
+    params = {
+        'address': address,
+        'key': api_key
+    }
+    response = requests.get(url, params=params)
+    if response.status_code != 200:
+        raise Exception("Failed to perform geocoding.")
+    data = response.json()
+    if data['status'] != 'OK':
+        raise Exception(f"Geocoding error: {data['status']}")
+    location = data['results'][0]['geometry']['location']
+    return location['lat'], location['lng']
+
+def get_weather(lat, lon):
     api_key = os.getenv('TOMORROWIO_API_KEY')
     url = "https://api.tomorrow.io/v4/timelines"
     payload = {
         'apikey': api_key,
         'location': f"{lat},{lon}",
-        'fields': ['temperatureMax','temperatureMin','weatherCode', 'windSpeed', 'precipitationProbability','precipitationType','humidity', 'sunriseTime','sunsetTime', 'visibility', 'moonPhase', 'cloudCover', 'pressureSurfaceLevel', 'pressureSeaLevel', 'windSpeed'],
+        'fields': ['temperature','temperatureMax','temperatureMin','weatherCode', 'windSpeed', 'precipitationProbability','precipitationType','humidity', 'sunriseTime','sunsetTime', 'visibility', 'moonPhase', 'cloudCover', 'pressureSurfaceLevel', 'pressureSeaLevel', 'windSpeed', 'uvIndex'],
         'units': 'imperial',
-        'timesteps': ['1d']
+        'timezone': 'America/Los_Angeles',
+        'timesteps': ['current', '1h','1d'],
     }
-
     headers = {
         "accept": "application/json",
         "Accept-Encoding": "gzip"
     }
     response = requests.get(url, headers=headers, params=payload)
-    # return response.json()
-    data = response.json()
-
-    # Add the location to the response data
-    data['location'] = {
-        'latitude': lat,
-        'longitude': lon
-    }
-
-    return data
-  
+    if response.status_code != 200:
+        raise Exception("Failed to retrieve weather data.")
+    return response.json()

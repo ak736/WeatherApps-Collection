@@ -12,30 +12,40 @@
   </head>
   <body>
     <div class="weather">
+      <div class="first-section">
       <div class="weather-search">
         <div class="title">Weather Search</div>
-        <div class="sub-title">Fill out the form to get weather info !</div>
+        <div class="sub-title">Fill out the form to get weather info!</div>
       </div>
+
       <div class="weather-form">
-        <form>
+        <form id="weather-form">
           <label for="Street">Street</label> <br />
           <input type="text" name="street" id="street" class="full-width" />
+          <span class="tooltip" id="street-tooltip"></span>
           <br />
           <div class="row">
             <div class="column">
               <label for="City">City</label><br />
               <input type="text" name="city" id="city" />
+              <span class="tooltip" id="city-tooltip"></span>
             </div>
+
             <div class="column">
               <label for="state">State</label><br />
               <select id="state" name="state">
                 <option value="">Select your state</option>
+                {% for state in states %}
+                <option value="{{ state }}">{{ state }}</option>
+                {% endfor %}
               </select>
+              <span class="tooltip" id="state-tooltip"></span>
             </div>
           </div>
           <hr class="styled-hr" />
+
           <div class="location-detect">
-            <p>Want us to auto-detect your location? </p>
+            <p>Want us to auto-detect your location?</p>
             <label for="auto-detect" class="check-here">Check here</label>
             <input type="checkbox" id="auto-detect" class="small-checkbox" />
           </div>
@@ -45,7 +55,74 @@
           </div>
         </form>
       </div>
-    </div>
+
+      </div>
+      <!-- </div> -->
+
+      <!-- Weather Results Section -->
+
+      <div id="weather-results" class="weather-results" style="display: none">
+        <div class="first-div">
+          <p id="location" class="location">Location</p>
+        </div>
+
+        <div class="second-div">
+          <div class="weather-condition" id="weather-condition">
+            <img id="weather-icon" class="weather-icon" src="" alt="Weather Icon" />
+            <p id="weather-description" class="weather-description"></p> 
+          </div>
+        <div class="temperature" id="temperature">Degree</div>
+      </div>
+
+      <div class="third-div">
+        <div class="humidity">
+          <span>Humidity</span>
+          <img src="static/images/humidity.png" alt="Humidity Icon" class="metric-icon" />
+          <span id="humidity">--%</span>
+        </div>
+
+        <div class="pressure">
+          <span>Pressure</span>
+          <img src="static/images/Pressure.png" alt="Pressure Icon" class="metric-icon" />
+          <span id="pressure">-- inHg</span>
+        </div>
+      
+        <div class="wind-speed">
+          <span>Wind Speed</span>
+          <img src="static/images/Wind_Speed.png" alt="Wind Speed Icon" class="metric-icon" />
+          <span id="wind-speed">-- mph</span>
+        </div>
+      
+        <div class="visibility">
+          <span>Visibility</span>
+          <img src="static/images/Visibility.png" alt="Visibility Icon" class="metric-icon" />
+          <span id="visibility">-- mi</span>
+        </div>
+      
+        <div class="cloud-cover">
+          <span>Cloud Cover</span>
+          <img src="static/images/Cloud_Cover.png" alt="Cloud Cover Icon" class="metric-icon" />
+          <span id="cloud-cover">--%</span>
+        </div>
+      
+        <div class="uv-level">
+          <span>UV Level</span>
+          <img src="static/images/UV_Level.png" alt="UV Level Icon" class="metric-icon" />
+          <span id="uv-level">--</span>
+        </div>
+        <!-- <div class="sunrise">
+          <span>Sunrise</span>
+          <span id="sunrise"></span>
+        </div>
+        <div class="sunset">
+          <span>Sunset</span>
+          <span id="sunset"></span>
+        </div> -->
+      </div>
+
+      </div>
+
+      </div>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
   </body>
 </html>

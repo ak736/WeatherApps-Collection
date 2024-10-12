@@ -1,17 +1,19 @@
 body {
   margin: 0;
   padding: 0;
-  margin-top: 50px;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center;     /* Center items horizontally */
   background-color: #e4e4e4;
   font-family: Arial, Helvetica, sans-serif;
 }
 
 .weather {
-  height: 50px;
-  width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+  gap: 2rem;
 }
 
 .title {
@@ -27,7 +29,6 @@ body {
   display: flex;
   flex-direction: column;
   padding: 30px 15px 15px 20px;
-
   gap: 1rem;
   background-image: url('../images/banner.jpg'); /* Relative path */
   background-size: cover;
@@ -114,3 +115,95 @@ body {
     background-color: #f5b707; /* Orange color */
     border-bottom: 3px solid #f28401; /* Darker shade for bottom shadow effect */
   }
+
+
+.tooltip {
+    color: red;
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+.weather-results {
+  /* margin-bottom: 20px; */
+  height: auto;
+  width: 650px;
+  background-color: #fefefe;
+  padding-bottom: 15px;
+}
+
+.first-div {
+  color: #969696;
+  font-size: 1.5rem;
+  font-weight: lighter;
+  padding-left: 20px;
+}
+
+.location {
+  margin: 0;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.second-div {
+  display: flex;
+  align-items: center;      /* Centers items vertically */
+  padding-left: 20px;
+  margin-bottom: 20px;
+  width: 100%;              /* Ensure it takes the full width of the container */
+}
+
+.weather-condition {
+  display: flex;
+  flex-direction: column;  /* Stacks icon and description vertically */
+  align-items: center;     /* Centers icon and description horizontally */
+  gap: 0.5rem;             /* Adds space between icon and description */
+  flex: 0 0 auto;          /* Prevents it from stretching */
+}
+
+.weather-icon {
+  height: 100px;
+  width: 100px;
+}
+
+.weather-description {
+  padding: 0;
+  margin: 0;
+  color: #969696;
+  font-size: 1rem;
+  text-align: center;      /* Centers the text */
+}
+
+.temperature {
+  flex: 1;                  /* Allows temperature div to take up remaining space */
+  text-align: center;      /* Centers the text within the temperature div */
+  font-size: 5rem;         /* Adjust size as needed */
+  color: #868686;          /* Adjust color as needed */
+}
+
+
+.third-div {
+  display: flex;                /* Enables Flexbox layout */
+  flex-direction: row;          /* Aligns items horizontally */
+  justify-content: space-between;      /* Centers metrics horizontally within the container */
+  align-items: center;          /* Aligns metrics vertically centered */
+  gap: 2rem;                    /* Adjusts space between each metric div */
+  margin-top: 20px;
+  color: #969696;
+  font-size: 1rem;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+/* Individual Metric Div Styling: Stack label, image, and value vertically */
+.third-div > div {
+  display: flex;                /* Enables Flexbox within each metric div */
+  flex-direction: column;       /* Stacks children vertically */
+  align-items: center;          /* Centers children horizontally */
+  gap: 1rem;                  /* Adjusts space between label, image, and value */
+}
+
+/* Metric Icon Styling */
+.metric-icon {
+  width: 40px;                  /* Sets the width of the icon */
+  height: 40px;                 /* Sets the height of the icon */
+  object-fit: contain;          /* Ensures the image scales correctly */
+}
