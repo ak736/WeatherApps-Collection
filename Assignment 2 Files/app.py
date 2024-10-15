@@ -1,5 +1,11 @@
 from flask import Flask, render_template, request, jsonify
-from weather import get_geoloc_from_ip, get_geoloc_from_address, get_weather, get_location_info_from_ip
+from weather import (
+    get_geoloc_from_ip, 
+    get_geoloc_from_address, 
+    get_weather, 
+    get_location_info_from_ip,
+    reverse_geocode  # Imported reverse_geocode
+)
 from dotenv import load_dotenv
 import logging
 
@@ -46,19 +52,25 @@ def get_weather_route():
                 app.logger.warning("Missing address fields.")
                 return jsonify({'error': 'Street, City, and State are required unless auto-detect is enabled.'}), 400
             lat, lon = get_geoloc_from_address(street, city, state)
-            response_data['address'] = {
-                'street': street,
-                'city': city,
-                'state': state
-            }
             app.logger.debug(f"Geocoded address. Latitude: {lat}, Longitude: {lon}")
-        
+
+            # Perform reverse geocoding to get detailed address components
+            address_info = reverse_geocode(lat, lon)
+            response_data['address'] = {
+                'street': address_info.get('street', street),
+                'city': address_info.get('city', city),
+                'state': address_info.get('state', state),  # Already abbreviated
+                'postal': address_info.get('postal', ''),
+                'country': address_info.get('country', 'USA'),
+            }
+            app.logger.debug(f"Reverse Geocoded Address Info: {response_data['address']}")
+
         # Get weather data
         weather_data = get_weather(lat, lon)
         response_data['weather'] = weather_data
         app.logger.debug(f"Weather data retrieved: {weather_data}")
         return jsonify(response_data)
-    
+
     except Exception as e:
         app.logger.error(f"Error in /get_weather: {e}")
         return jsonify({'error': str(e)}), 500

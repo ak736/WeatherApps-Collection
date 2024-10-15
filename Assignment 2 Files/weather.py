@@ -59,13 +59,62 @@ def get_geoloc_from_address(street, city, state):
     location = data['results'][0]['geometry']['location']
     return location['lat'], location['lng']
 
+def reverse_geocode(lat, lon):
+    """
+    Converts latitude and longitude into detailed address components using Google Geocoding API.
+    Returns a dictionary with street, city, state (abbreviated), postal code, and country.
+    """
+    api_key = os.getenv('GEOCODING_API_KEY')
+    url = "https://maps.googleapis.com/maps/api/geocode/json"
+    params = {
+        'latlng': f"{lat},{lon}",
+        'key': api_key,
+    }
+    response = requests.get(url, params=params)
+    if response.status_code != 200:
+        raise Exception("Failed to perform reverse geocoding.")
+    data = response.json()
+    if data['status'] != 'OK':
+        raise Exception(f"Reverse Geocoding error: {data['status']}")
+
+    # Parse the address components
+    components = data['results'][0]['address_components']
+    address_info = {}
+    for component in components:
+        types = component['types']
+        if 'street_number' in types:
+            address_info['street_number'] = component['long_name']
+        if 'route' in types:
+            address_info['route'] = component['long_name']
+        if 'locality' in types:
+            address_info['city'] = component['long_name']
+        if 'administrative_area_level_1' in types:
+            address_info['state'] = component['short_name']  # Abbreviated state
+        if 'postal_code' in types:
+            address_info['postal'] = component['long_name']
+        if 'country' in types:
+            address_info['country'] = component['long_name']
+
+    # Construct the street address
+    street_number = address_info.get('street_number', '')
+    route = address_info.get('route', '')
+    street = f"{street_number} {route}".strip()
+
+    return {
+        'street': street,
+        'city': address_info.get('city', ''),
+        'state': address_info.get('state', ''),
+        'postal': address_info.get('postal', ''),
+        'country': address_info.get('country', 'USA'),
+    }
+
 def get_weather(lat, lon):
     api_key = os.getenv('TOMORROWIO_API_KEY')
     url = "https://api.tomorrow.io/v4/timelines"
     payload = {
         'apikey': api_key,
         'location': f"{lat},{lon}",
-        'fields': ['temperature','temperatureMax','temperatureMin','weatherCode', 'windSpeed', 'precipitationProbability','precipitationType','humidity', 'sunriseTime','sunsetTime', 'visibility', 'moonPhase', 'cloudCover', 'pressureSurfaceLevel', 'pressureSeaLevel', 'windSpeed', 'uvIndex'],
+        'fields': ['temperature','temperatureMax','temperatureMin','weatherCode', 'windSpeed', 'precipitationProbability','precipitationType','humidity', 'sunriseTime','sunsetTime', 'visibility', 'moonPhase', 'cloudCover', 'pressureSurfaceLevel', 'pressureSeaLevel', 'windSpeed', 'windDirection','uvIndex'],
         'units': 'imperial',
         'timezone': 'America/Los_Angeles',
         'timesteps': ['current', '1h','1d'],

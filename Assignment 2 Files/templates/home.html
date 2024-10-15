@@ -7,60 +7,73 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/home.css') }}"
     />
-
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Highcharts Scripts -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/boost.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/datagrouping.js"></script>
+<script src="https://code.highcharts.com/modules/windbarb.js"></script>
+<script src="https://code.highcharts.com/modules/pattern-fill.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <!-- Your Main JavaScript File -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <title>Weather App</title>
   </head>
   <body>
     <div class="weather">
       <div class="first-section">
-      <div class="weather-search">
-        <div class="title">Weather Search</div>
-        <div class="sub-title">Fill out the form to get weather info!</div>
-      </div>
+        <div class="weather-search">
+          <div class="title">Weather Search</div>
+          <div class="sub-title">Fill out the form to get weather info!</div>
+        </div>
 
-      <div class="weather-form">
-        <form id="weather-form">
-          <label for="Street">Street</label> <br />
-          <input type="text" name="street" id="street" class="full-width" />
-          <span class="tooltip" id="street-tooltip"></span>
-          <br />
-          <div class="row">
-            <div class="column">
-              <label for="City">City</label><br />
-              <input type="text" name="city" id="city" />
-              <span class="tooltip" id="city-tooltip"></span>
+        <div class="weather-form">
+          <form id="weather-form">
+            <label for="Street">Street</label> <br />
+            <input type="text" name="street" id="street" class="full-width" />
+            <span class="tooltip" id="street-tooltip"></span>
+            <br />
+            <div class="row">
+              <div class="column">
+                <label for="City">City</label><br />
+                <input type="text" name="city" id="city" />
+                <span class="tooltip" id="city-tooltip"></span>
+              </div>
+
+              <div class="column">
+                <label for="state">State</label><br />
+                <select id="state" name="state">
+                  <option value="">Select your state</option>
+                  {% for state in states %}
+                  <option value="{{ state }}">{{ state }}</option>
+                  {% endfor %}
+                </select>
+                <span class="tooltip" id="state-tooltip"></span>
+              </div>
             </div>
+            <hr class="styled-hr" />
 
-            <div class="column">
-              <label for="state">State</label><br />
-              <select id="state" name="state">
-                <option value="">Select your state</option>
-                {% for state in states %}
-                <option value="{{ state }}">{{ state }}</option>
-                {% endfor %}
-              </select>
-              <span class="tooltip" id="state-tooltip"></span>
+            <div class="location-detect">
+              <p>Want us to auto-detect your location?</p>
+              <label for="auto-detect" class="check-here">Check here</label>
+              <input type="checkbox" id="auto-detect" class="small-checkbox" />
             </div>
-          </div>
-          <hr class="styled-hr" />
-
-          <div class="location-detect">
-            <p>Want us to auto-detect your location?</p>
-            <label for="auto-detect" class="check-here">Check here</label>
-            <input type="checkbox" id="auto-detect" class="small-checkbox" />
-          </div>
-          <div class="buttons-footer">
-            <button type="submit" class="btn submit-btn">SUBMIT</button>
-            <button type="reset" class="btn clear-btn">CLEAR</button>
-          </div>
-        </form>
+            <div class="buttons-footer">
+              <button type="submit" class="btn submit-btn">SUBMIT</button>
+              <button type="reset" class="btn clear-btn">CLEAR</button>
+            </div>
+          </form>
+        </div>
       </div>
-
-      </div>
-      <!-- </div> -->
 
       <!-- Weather Results Section -->
-
       <div id="weather-results" class="weather-results" style="display: none">
         <div class="first-div">
           <p id="location" class="location">Location</p>
@@ -68,61 +81,163 @@
 
         <div class="second-div">
           <div class="weather-condition" id="weather-condition">
-            <img id="weather-icon" class="weather-icon" src="" alt="Weather Icon" />
-            <p id="weather-description" class="weather-description"></p> 
+            <img
+              id="weather-icon"
+              class="weather-icon"
+              src=""
+              alt="Weather Icon"
+            />
+            <p id="weather-description" class="weather-description"></p>
           </div>
-        <div class="temperature" id="temperature">Degree</div>
-      </div>
-
-      <div class="third-div">
-        <div class="humidity">
-          <span>Humidity</span>
-          <img src="static/images/humidity.png" alt="Humidity Icon" class="metric-icon" />
-          <span id="humidity">--%</span>
+          <div class="temperature" id="temperature">Temperature</div>
         </div>
 
-        <div class="pressure">
-          <span>Pressure</span>
-          <img src="static/images/Pressure.png" alt="Pressure Icon" class="metric-icon" />
-          <span id="pressure">-- inHg</span>
+        <div class="third-div">
+          <div class="humidity">
+            <span>Humidity</span>
+            <img
+              src="static/images/humidity.png"
+              alt="Humidity Icon"
+              class="metric-icon"
+            />
+            <span id="humidity">--%</span>
+          </div>
+
+          <div class="pressure">
+            <span>Pressure</span>
+            <img
+              src="static/images/Pressure.png"
+              alt="Pressure Icon"
+              class="metric-icon"
+            />
+            <span id="pressure">-- inHg</span>
+          </div>
+
+          <div class="wind-speed">
+            <span>Wind Speed</span>
+            <img
+              src="static/images/Wind_Speed.png"
+              alt="Wind Speed Icon"
+              class="metric-icon"
+            />
+            <span id="wind-speed">-- mph</span>
+          </div>
+
+          <div class="visibility">
+            <span>Visibility</span>
+            <img
+              src="static/images/Visibility.png"
+              alt="Visibility Icon"
+              class="metric-icon"
+            />
+            <span id="visibility">-- mi</span>
+          </div>
+
+          <div class="cloud-cover">
+            <span>Cloud Cover</span>
+            <img
+              src="static/images/Cloud_Cover.png"
+              alt="Cloud Cover Icon"
+              class="metric-icon"
+            />
+            <span id="cloud-cover">--%</span>
+          </div>
+
+          <div class="uv-level">
+            <span>UV Level</span>
+            <img
+              src="static/images/UV_Level.png"
+              alt="UV Level Icon"
+              class="metric-icon"
+            />
+            <span id="uv-level">--</span>
+          </div>
         </div>
-      
-        <div class="wind-speed">
-          <span>Wind Speed</span>
-          <img src="static/images/Wind_Speed.png" alt="Wind Speed Icon" class="metric-icon" />
-          <span id="wind-speed">-- mph</span>
-        </div>
-      
-        <div class="visibility">
-          <span>Visibility</span>
-          <img src="static/images/Visibility.png" alt="Visibility Icon" class="metric-icon" />
-          <span id="visibility">-- mi</span>
-        </div>
-      
-        <div class="cloud-cover">
-          <span>Cloud Cover</span>
-          <img src="static/images/Cloud_Cover.png" alt="Cloud Cover Icon" class="metric-icon" />
-          <span id="cloud-cover">--%</span>
-        </div>
-      
-        <div class="uv-level">
-          <span>UV Level</span>
-          <img src="static/images/UV_Level.png" alt="UV Level Icon" class="metric-icon" />
-          <span id="uv-level">--</span>
-        </div>
-        <!-- <div class="sunrise">
-          <span>Sunrise</span>
-          <span id="sunrise"></span>
-        </div>
-        <div class="sunset">
-          <span>Sunset</span>
-          <span id="sunset"></span>
-        </div> -->
       </div>
 
+      <!-- Weather for Next 6 days -->
+      <div id="forecast-section" style="display: none" class="forecast-section">
+        <table id="forecast-table" class="forecast-table">
+          <thead>
+            <tr class="table-heading">
+              <th>Date</th>
+              <th>Status</th>
+              <th>Temp High</th>
+              <th>Temp Low</th>
+              <th>Wind Speed</th>
+            </tr>
+          </thead>
+          <tbody class="table-values">
+            <!-- Forecast data will be inserted here -->
+          </tbody>
+        </table>
       </div>
 
+      <!-- Daily Weather Details Section -->
+      <div
+        id="daily-weather-details"
+        class="daily-weather-details"
+        style="display: none"
+      >
+        <p class="daily-weather-sec-title" style="font-family: 'Lato', sans-serif; font-weight: 400;">Daily Weather Details</p>
+        <hr class="styled-hr2" />
+
+        <div class="weather-card">
+          <div class="top-section">
+            <div class="left-section">
+              <h3 id="card-date">Date Placeholder</h3>
+              <span id="card-status-text">Status Placeholder</span>
+              <p id="card-temperature-range" class="temperature-range">
+                Temp Range Placeholder
+              </p>
+            </div>
+
+            <div class="card-icon">
+              <img
+                id="card-status-icon"
+                src=""
+                alt=""
+                class="status-icon-details"
+              />
+            </div>
+          </div>
+
+          <div class="details-section" id="details-section">
+            <p>Precipitation: <span id="card-precipitation">--</span></p>
+            <p>Chance of Rain: <span id="card-chance-of-rain">--</span></p>
+            <p>Wind Speed: <span id="card-wind-speed">--</span></p>
+            <p>Humidity: <span id="card-humidity">--</span></p>
+            <p>Visibility: <span id="card-visibility">--</span></p>
+            <p>Sunrise/Sunset: <span id="card-sunrise-sunset">--</span></p>
+          </div>
+        </div>
       </div>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+      <!-- Weather Chart Section -->
+      <div class="weather-chart" id="weather-chart" style="display: none;">
+        <p class="weather-chart-title">Weather Charts</p>
+        <hr class="styled-hr3" />
+        
+        <!-- Toggle Button -->
+        <img
+          id="toggle-weather-chart-button"
+          src="/static/images/point-down-512.png" 
+          alt="Show Weather High Chart"
+          class="toggle-button"
+          style="cursor: pointer; width: 24px; height: 24px; display: block; margin: 10px auto;"
+        />
+        <!-- Hidden Weather High Chart Container -->
+        <div id="weather-high-chart-container" style="display: none; margin-top: 20px;">
+          <!-- Highcharts will render the chart here -->
+          <div id="weather-chart-container" style="height: 400px; max-width: 800px; margin: 0 auto;"></div>
+          <div id="meteogram-container" style="max-width: 800px; min-width: 380px; height: 310px; margin: 40px auto; display: none;">
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
   </body>
 </html>
