@@ -16,7 +16,7 @@ body {
   padding: 0;
   display: flex;
   flex-direction: column; /* Stack items vertically */
-  align-items: center;     /* Center items horizontally */
+  align-items: center; /* Center items horizontally */
   background-color: #e4e4e4;
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -35,7 +35,7 @@ body {
   font-size: 18px;
 }
 
-.sub-title{
+.sub-title {
   color: #656667;
 }
 .weather-search {
@@ -60,48 +60,47 @@ body {
 
 /* Full width for the Street input */
 .full-width {
-    width: 400px;
-    margin-bottom: 15px; /* Adjust the space below the Street input */
-  }
-  
-  /* Flexbox for the row containing City and State */
-  .row {
-    display: flex;
-    gap: 15px; /* Space between City and State */
-  }
-  
-  /* Make both City and State columns take equal space */
-  .column {
-    flex: 1;
-  }
-  
-  /* Add full width to inputs/selects inside columns */
-  .column input,
-  .column select {
-    width: 100%;
-  }
-
-.styled-hr {
-    border: none; /* Remove default border */
-    border-top: 1px solid #ccc; /* Add a thin grey line */
-    margin: 20px 0 0 0; /* Add space above and below the line */
-    width: 100%; 
+  width: 400px;
+  margin-bottom: 15px; /* Adjust the space below the Street input */
 }
 
+/* Flexbox for the row containing City and State */
+.row {
+  display: flex;
+  gap: 15px; /* Space between City and State */
+}
+
+/* Make both City and State columns take equal space */
+.column {
+  flex: 1;
+}
+
+/* Add full width to inputs/selects inside columns */
+.column input,
+.column select {
+  width: 100%;
+}
+
+.styled-hr {
+  border: none; /* Remove default border */
+  border-top: 1px solid #ccc; /* Add a thin grey line */
+  margin: 20px 0 0 0; /* Add space above and below the line */
+  width: 100%;
+}
 
 .location-detect {
-    margin-top: 0;
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    color: #2e5aa3;
-  }
+  margin-top: 0;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #2e5aa3;
+}
 
 .location {
   font-size: 1.2rem;
 }
 .check-here {
-    margin-left: 5px;
+  margin-left: 5px;
 }
 .small-checkbox {
   transform: scale(0.8);
@@ -109,40 +108,39 @@ body {
 }
 
 .button-footer {
-    display: flex;
-    gap: 20px; /* Space between the buttons */
-    margin-top: 20px; /* Space above the buttons */
-  }
+  display: flex;
+  gap: 20px; /* Space between the buttons */
+  margin-top: 20px; /* Space above the buttons */
+}
 
 .btn {
-    padding: 10px 25px;
-    font-size: 15px;
-    color: white;
-    border: none;
-    cursor: pointer;
-    text-align: center;
-    letter-spacing: 1px;
-    /* font-weight: bold; */
-    /* box-shadow: 0 5px 0 rgba(0, 0, 0, 0.2);  */
-  }
-  
-  /* Submit button styles */
-  .submit-btn {
-    background-color: #4f6fad; /* Blue color */
-    border-bottom: 3px solid #364c77; /* Darker shade for bottom shadow effect */
-  }
-  
-  /* Clear button styles */
-  .clear-btn {
-    background-color: #f5b707; /* Orange color */
-    border-bottom: 3px solid #f28401; /* Darker shade for bottom shadow effect */
-  }
+  padding: 10px 25px;
+  font-size: 15px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  letter-spacing: 1px;
+  /* font-weight: bold; */
+  /* box-shadow: 0 5px 0 rgba(0, 0, 0, 0.2);  */
+}
 
+/* Submit button styles */
+.submit-btn {
+  background-color: #4f6fad; /* Blue color */
+  border-bottom: 3px solid #364c77; /* Darker shade for bottom shadow effect */
+}
+
+/* Clear button styles */
+.clear-btn {
+  background-color: #f5b707; /* Orange color */
+  border-bottom: 3px solid #f28401; /* Darker shade for bottom shadow effect */
+}
 
 .tooltip {
-    color: red;
-    font-size: 12px;
-    margin-left: 5px;
+  color: red;
+  font-size: 12px;
+  margin-left: 5px;
 }
 
 .weather-results {
@@ -167,18 +165,18 @@ body {
 }
 .second-div {
   display: flex;
-  align-items: center;      /* Centers items vertically */
+  align-items: center; /* Centers items vertically */
   padding-left: 20px;
   margin-bottom: 20px;
-  width: 100%;              /* Ensure it takes the full width of the container */
+  width: 100%; /* Ensure it takes the full width of the container */
 }
 
 .weather-condition {
   display: flex;
-  flex-direction: column;  /* Stacks icon and description vertically */
-  align-items: center;     /* Centers icon and description horizontally */
-  gap: 0.5rem;             /* Adds space between icon and description */
-  flex: 0 0 auto;          /* Prevents it from stretching */
+  flex-direction: column; /* Stacks icon and description vertically */
+  align-items: center; /* Centers icon and description horizontally */
+  gap: 0.5rem; /* Adds space between icon and description */
+  flex: 0 0 auto; /* Prevents it from stretching */
 }
 
 .weather-icon {
@@ -191,23 +189,22 @@ body {
   margin: 0;
   color: #969696;
   font-size: 1rem;
-  text-align: center;      /* Centers the text */
+  text-align: center; /* Centers the text */
 }
 
 .temperature {
-  flex: 1;                  /* Allows temperature div to take up remaining space */
-  text-align: center;      /* Centers the text within the temperature div */
-  font-size: 5rem;         /* Adjust size as needed */
-  color: #868686;          /* Adjust color as needed */
+  flex: 1; /* Allows temperature div to take up remaining space */
+  text-align: center; /* Centers the text within the temperature div */
+  font-size: 5rem; /* Adjust size as needed */
+  color: #868686; /* Adjust color as needed */
 }
 
-
 .third-div {
-  display: flex;                /* Enables Flexbox layout */
-  flex-direction: row;          /* Aligns items horizontally */
-  justify-content: space-between;      /* Centers metrics horizontally within the container */
-  align-items: center;          /* Aligns metrics vertically centered */
-  gap: 2rem;                    /* Adjusts space between each metric div */
+  display: flex; /* Enables Flexbox layout */
+  flex-direction: row; /* Aligns items horizontally */
+  justify-content: space-between; /* Centers metrics horizontally within the container */
+  align-items: center; /* Aligns metrics vertically centered */
+  gap: 2rem; /* Adjusts space between each metric div */
   margin-top: 20px;
   color: #969696;
   font-size: 1rem;
@@ -217,45 +214,44 @@ body {
 
 /* Individual Metric Div Styling: Stack label, image, and value vertically */
 .third-div > div {
-  display: flex;                /* Enables Flexbox within each metric div */
-  flex-direction: column;       /* Stacks children vertically */
-  align-items: center;          /* Centers children horizontally */
-  gap: 1rem;                  /* Adjusts space between label, image, and value */
+  display: flex; /* Enables Flexbox within each metric div */
+  flex-direction: column; /* Stacks children vertically */
+  align-items: center; /* Centers children horizontally */
+  gap: 1rem; /* Adjusts space between label, image, and value */
 }
 
 /* Metric Icon Styling */
 .metric-icon {
-  width: 40px;                  /* Sets the width of the icon */
-  height: 40px;                 /* Sets the height of the icon */
-  object-fit: contain;          /* Ensures the image scales correctly */
+  width: 40px; /* Sets the width of the icon */
+  height: 40px; /* Sets the height of the icon */
+  object-fit: contain; /* Ensures the image scales correctly */
 }
 
 /* Forecast Section Styles */
 .forecast-section {
   width: 100%;
   max-width: 1400px; /* Increase max-width to make the table wider */
-  margin: 0 auto;    /* Center the table */
+  margin: 0 auto; /* Center the table */
 }
 
 /* Forecast Table Styles */
 .forecast-table {
-  width: 900px;            /* Make the table take full width */
+  width: 900px; /* Make the table take full width */
   border-collapse: separate;
   margin-top: 20px;
   border-spacing: 0 10px;
-
-
 }
 
-.forecast-table th, .forecast-table td {
-  padding: 16px;          
+.forecast-table th,
+.forecast-table td {
+  padding: 16px;
   text-align: center;
   font-size: 16px;
 }
 
 .forecast-table th {
   background-color: #4f6fad;
-  font-size: 16px;        /* Slightly larger font for headers */
+  font-size: 16px; /* Slightly larger font for headers */
   padding: 15px;
   color: #374052;
   text-align: center;
@@ -263,7 +259,7 @@ body {
 }
 
 .forecast-icon {
-  width: 60px;            /* Adjust icon size as needed */
+  width: 60px; /* Adjust icon size as needed */
   vertical-align: middle;
   margin-right: 5px;
 }
@@ -289,16 +285,30 @@ body {
   margin-bottom: 30px; /* Adjust as needed */
 }
 
-.daily-weather-sec-title, .weather-chart-title {
-  /* font-family: 'Lato', sans-serif; */
+.daily-weather-sec-title,
+.weather-chart-title {
   font-size: 2rem;
   margin: 0; /* Remove default margins */
   padding: 0; /* Remove default paddings */
   text-align: center;
   align-items: center;
 }
-
-
+.daily-weather-sec-title {
+  font-family: 'Lato', sans-serif;
+  font-weight: 300; /* Adjust this as needed */
+}
+.weather-chart-title {
+  font-family: 'Lato', sans-serif;
+  font-weight: 300; /* Adjust this as needed */
+}
+.details-section {
+  font-family: 'Lato', sans-serif;
+  font-weight: 700; /* Adjust this as needed */
+}
+.left-section {
+  font-family: 'Lato', sans-serif;
+  font-weight: 500; /* Adjust this as needed */
+}
 .weather-card {
   background: linear-gradient(to top, #3d527c, #ffffff);
   height: 340px;
@@ -320,7 +330,8 @@ body {
   /* padding-top: 15px; */
 }
 
-#card-date, #card-status-text {
+#card-date,
+#card-status-text {
   font-family: 'Red Ring Light';
   font-size: 1.4rem;
 }
@@ -336,7 +347,6 @@ body {
   width: 300px;
   padding-top: 25px;
   /* margin: 0;  */
-
 }
 .left-section h3,
 .left-section span,
@@ -366,21 +376,20 @@ body {
   margin-top: 40px;
   display: flex;
   flex-direction: column; /* Align items vertically */
-  align-items: center;    /* Center items horizontally */
+  align-items: center; /* Center items horizontally */
   justify-content: center; /* Center items vertically */
-  text-align: center;     /* Center text inside elements */
+  text-align: center; /* Center text inside elements */
   color: white;
   font-weight: 800;
   line-height: 1.6rem;
-
 }
 
 #weather-chart-container {
   height: 400px;
   width: 1000px;
   margin: 0 auto;
+  font-family: 'Lato', sans-serif;
 }
-
 
 #meteogram-container {
   max-width: 800px;
