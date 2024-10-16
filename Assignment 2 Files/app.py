@@ -83,6 +83,40 @@ def get_location():
     except Exception as e:
         app.logger.error(f"Error in /get_location: {e}")
         return jsonify({'error': str(e)}), 500
+    
+@app.route("/handleRequest", methods=['GET'])
+def handle_request():
+    # Get input parameters from the request
+    street = request.args.get('street', default='', type=str)
+    city = request.args.get('city', default='', type=str)
+    state = request.args.get('state', default='', type=str)
+
+    # Check if inputs are provided
+    if not street or not city or not state:
+        return jsonify({"error": "Street, City, and State are required."}), 400
+
+    try:
+        # Get the latitude and longitude from the address
+        lat, lon = get_geoloc_from_address(street, city, state)
+
+        # Get the weather data using the latitude and longitude
+        weather_data = get_weather(lat, lon)
+
+        # Construct the full address
+        full_address = f"{street}, {city}, {state}"
+
+        # Prepare the response with weather data and full address
+        response = {
+            "address": full_address,
+            "weather": weather_data
+        }
+
+        # Return the response as JSON
+        return jsonify(response)
+
+    except Exception as e:
+        logging.error(f"Error occurred: {e}")
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)

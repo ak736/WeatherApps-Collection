@@ -25,26 +25,10 @@
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
     <!-- Your Main JavaScript File -->
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-          fetch('/get_states')
-              .then(response => response.json())
-              .then(data => {
-                  const statesDropdown = document.getElementById('states-dropdown');
-                  data.states.forEach(state => {
-                      const option = document.createElement('option');
-                      option.value = state;
-                      option.textContent = state;
-                      statesDropdown.appendChild(option);
-                  });
-              })
-              .catch(error => console.error('Error fetching states:', error));
-      });
-  </script>
     <title>Weather App</title>
   </head>
   <body>
-    <div class="weather">
+    <div class="weather" id="weather">
       <div class="first-section">
         <div class="weather-search">
           <div class="title">Weather Search</div>
@@ -87,9 +71,11 @@
               <button type="reset" class="btn clear-btn">CLEAR</button>
             </div>
           </form>
-        </div>
-      </div>
 
+        </div>
+        
+
+      </div>
       <!-- Weather Results Section -->
       <div id="weather-results" class="weather-results" style="display: none">
         <div class="first-div">
@@ -229,7 +215,7 @@
           </div>
         </div>
       </div>
-
+    </div>
       <!-- Weather Chart Section -->
       <div class="weather-chart" id="weather-chart" style="display: none;">
         <p class="weather-chart-title">Weather Charts</p>
@@ -243,7 +229,7 @@
           class="toggle-button"
           style="cursor: pointer; width: 24px; height: 24px; display: block; margin: 10px auto;"
         />
-        <!-- Hidden Weather High Chart Container -->
+        <!-- Weather High Chart Container -->
         <div id="weather-high-chart-container" style="display: none; margin-top: 20px;">
           <!-- Highcharts will render the chart here -->
           <div id="weather-chart-container" style="height: 400px; max-width: 800px; margin: 0 auto;"></div>
@@ -254,7 +240,7 @@
 
         </div>
       </div>
-    </div>
+    
 
   </body>
 </html>

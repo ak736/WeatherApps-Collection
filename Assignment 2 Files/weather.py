@@ -60,10 +60,6 @@ def get_geoloc_from_address(street, city, state):
     return location['lat'], location['lng']
 
 def reverse_geocode(lat, lon):
-    """
-    Converts latitude and longitude into detailed address components using Google Geocoding API.
-    Returns a dictionary with street, city, state (abbreviated), postal code, and country.
-    """
     api_key = os.getenv('GEOCODING_API_KEY')
     url = "https://maps.googleapis.com/maps/api/geocode/json"
     params = {
@@ -127,3 +123,4 @@ def get_weather(lat, lon):
     if response.status_code != 200:
         raise Exception("Failed to retrieve weather data.")
     return response.json()
+

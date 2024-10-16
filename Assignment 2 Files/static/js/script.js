@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const stateTooltip = document.getElementById('state-tooltip')
 
   const weatherResults = document.getElementById('weather-results')
+  const forecastSection = document.getElementById('forecast-section')
 
   const locationEl = document.getElementById('location')
   const temperatureEl = document.getElementById('temperature')
@@ -281,35 +282,32 @@ document.addEventListener('DOMContentLoaded', () => {
         xAxis: [
           {
             type: 'datetime',
-            crosshair: true,
-            title: {
-              text: 'Time',
-            },
-            labels: {
-              format: '{value:%H}',
-              step: 1,
-              rotation: 0,
-            },
-            tickInterval: 6 * 3600 * 1000, // 6 hours
-            minTickInterval: 6 * 3600 * 1000,
-            startOnTick: true,
-            endOnTick: false,
-            min: this.calculateMinX(),
-            max: this.calculateMaxX(),
-            tickPositioner: function () {
-              const start =
-                Math.floor(this.dataMin / (24 * 3600 * 1000)) *
-                  24 *
-                  3600 *
-                  1000 +
-                6 * 3600 * 1000 // Start at 06:00
-              const end =
-                Math.ceil(this.dataMax / (24 * 3600 * 1000)) * 24 * 3600 * 1000
-              const positions = []
-              for (let i = start; i <= end; i += 6 * 3600 * 1000) {
-                positions.push(i)
-              }
-              return positions
+          crosshair: true,
+          title: {
+            text: 'Time',
+          },
+          labels: {
+            format: '{value:%H}',
+            step: 1,
+            rotation: 0,
+          },
+          tickInterval: 6 * 3600 * 1000, // 6 hours
+          minTickInterval: 6 * 3600 * 1000,
+          startOnTick: true,
+          endOnTick: false,
+          min: this.calculateMinX(),
+          max: this.calculateMaxX(),
+          tickPositioner: function () {
+            const start =
+              Math.floor(this.dataMin / (24 * 3600 * 1000)) *
+                24 *
+                3600 *
+                1000; // Start at midnight of the current day
+            const positions = [];
+            for (let i = start; i <= this.dataMax; i += 6 * 3600 * 1000) {
+              positions.push(i);
+            }
+            return positions;
             },
           },
           {
@@ -459,7 +457,7 @@ document.addEventListener('DOMContentLoaded', () => {
           {
             name: 'Humidity',
             data: this.humidities,
-            type: 'area',
+            type: 'column',
             color: '#68CFE8',
             yAxis: 1,
             fillOpacity: 0.3,
@@ -710,32 +708,38 @@ document.addEventListener('DOMContentLoaded', () => {
       weatherHighChartContainer.style.display === 'none' ||
       weatherHighChartContainer.style.display === ''
     ) {
-      weatherHighChartContainer.style.display = 'block'
-      toggleWeatherChartButton.src = '/static/images/point-up-512.png'
-      toggleWeatherChartButton.alt = 'Hide Weather High Chart'
-
+      weatherHighChartContainer.style.display = 'block';
+      toggleWeatherChartButton.src = '/static/images/point-up-512.png';
+      toggleWeatherChartButton.alt = 'Hide Weather High Chart';
+  
+      // Use setTimeout to delay the scroll action
+      setTimeout(() => {
+        // Scroll to the top of the weather high chart container
+        weatherHighChartContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100); // Adjust the delay as needed (100 milliseconds here)
+  
       if (window.weatherChartData && !window.weatherChartRendered) {
-        renderTemperatureRangeChart(window.weatherChartData)
-        window.weatherChartRendered = true
+        renderTemperatureRangeChart(window.weatherChartData);
+        window.weatherChartRendered = true;
       }
-
+  
       if (window.weatherData && !window.meteogramRendered) {
         window.meteogram = new Meteogram(
           window.weatherData,
           'meteogram-container'
-        )
-        window.meteogramRendered = true
-        meteogramContainer.style.display = 'block' // Ensure container is visible
+        );
+        window.meteogramRendered = true;
+        meteogramContainer.style.display = 'block'; // Ensure container is visible
       } else {
-        meteogramContainer.style.display = 'block' // Show container even if already rendered
+        meteogramContainer.style.display = 'block'; // Show container even if already rendered
       }
     } else {
-      weatherHighChartContainer.style.display = 'none'
-      toggleWeatherChartButton.src = '/static/images/point-down-512.png'
-      toggleWeatherChartButton.alt = 'Show Weather High Chart'
+      weatherHighChartContainer.style.display = 'none';
+      toggleWeatherChartButton.src = '/static/images/point-down-512.png';
+      toggleWeatherChartButton.alt = 'Show Weather High Chart';
     }
-  })
-
+  });
+  
   form.addEventListener('reset', () => {
     // Hide all result sections
     weatherResults.style.display = 'none'
@@ -792,6 +796,8 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault() // Prevent default form submission
 
     clearTooltips() // Clear previous tooltips
+    document.getElementById('daily-weather-details').style.display = 'none'
+    document.getElementById('weather-chart').style.display = 'none'
     weatherResults.style.display = 'none' // Hide previous results
 
     const street = streetInput.value.trim()
@@ -799,7 +805,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const state = stateSelect.value
     const autoDetect = autoDetectCheckbox.checked
 
-    let valid = true
+    let valid = true // Flag to track validity of inputs
 
     // Validate inputs if auto-detect is not checked
     if (!autoDetect) {
@@ -817,6 +823,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+    // If not valid, stop the process
     if (!valid) {
       return // Stop if validation fails
     }
@@ -835,7 +842,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch(`/get_weather?${params.toString()}`)
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Network response was not ok')
+          throw new Error('No records have been found')
         }
         return response.json()
       })
@@ -843,13 +850,15 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Weather data received:', data) // Log data for debugging
         if (data.error) {
           weatherResults.innerHTML = `<p class="error">${data.error}</p>`
+          weatherResults.style.display = 'block' // Show error if any
         } else {
           displayWeather(data, autoDetect)
         }
       })
       .catch((error) => {
         console.error('Fetch error:', error)
-        weatherResults.innerHTML = `<p class="error">An unexpected error occurred: ${error.message}</p>`
+        weatherResults.innerHTML = `<p class="error">${error.message}</p>`
+        weatherResults.style.display = 'block' // Show error if any
       })
   })
 
@@ -1051,7 +1060,7 @@ document.addEventListener('DOMContentLoaded', () => {
           statusCell.appendChild(statusText)
 
           // Add event listener to status cell
-          statusCell.addEventListener('click', function () {
+          row.addEventListener('click', function () {
             // Hide 'weather-results' and 'forecast-section'
             weatherResults.style.display = 'none'
             forecastSection.style.display = 'none'
@@ -1179,3 +1188,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 })
+
+document
+  .getElementById('weather-form')
+  .addEventListener('submit', function (event) {
+    event.preventDefault() // Prevent the default form submission
+
+    const formData = new FormData(this)
+
+    fetch('/handleRequest?' + new URLSearchParams(formData), {
+      method: 'GET',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data) // Process the response data here
+      })
+      .catch((error) => {
+        console.error('Error:', error)
+      })
+  })
