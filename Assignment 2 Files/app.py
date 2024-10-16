@@ -29,7 +29,7 @@ US_STATES = [
 
 @app.route('/')
 def index():
-    return render_template('home.html', states=US_STATES)
+    return app.send_static_file('home.html')
 
 @app.route('/get_weather', methods=['GET'])
 def get_weather_route():

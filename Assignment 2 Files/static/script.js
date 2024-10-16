@@ -60,6 +60,70 @@ document.addEventListener('DOMContentLoaded', () => {
     stateTooltip.textContent = ''
   }
 
+  const US_STATES = [
+    'Alabama',
+    'Alaska',
+    'Arizona',
+    'Arkansas',
+    'California',
+    'Colorado',
+    'Connecticut',
+    'Delaware',
+    'Florida',
+    'Georgia',
+    'Hawaii',
+    'Idaho',
+    'Illinois',
+    'Indiana',
+    'Iowa',
+    'Kansas',
+    'Kentucky',
+    'Louisiana',
+    'Maine',
+    'Maryland',
+    'Massachusetts',
+    'Michigan',
+    'Minnesota',
+    'Mississippi',
+    'Missouri',
+    'Montana',
+    'Nebraska',
+    'Nevada',
+    'New Hampshire',
+    'New Jersey',
+    'New Mexico',
+    'New York',
+    'North Carolina',
+    'North Dakota',
+    'Ohio',
+    'Oklahoma',
+    'Oregon',
+    'Pennsylvania',
+    'Rhode Island',
+    'South Carolina',
+    'South Dakota',
+    'Tennessee',
+    'Texas',
+    'Utah',
+    'Vermont',
+    'Virginia',
+    'Washington',
+    'West Virginia',
+    'Wisconsin',
+    'Wyoming',
+  ]
+
+  // Get the dropdown element
+  const dropdown = document.getElementById('state')
+
+  // Populate the dropdown with options
+  US_STATES.forEach((state) => {
+    let option = document.createElement('option')
+    option.value = state
+    option.textContent = state
+    dropdown.appendChild(option)
+  })
+
   const toggleWeatherChartButton = document.getElementById(
     'toggle-weather-chart-button'
   )
@@ -282,32 +346,29 @@ document.addEventListener('DOMContentLoaded', () => {
         xAxis: [
           {
             type: 'datetime',
-          crosshair: true,
-          title: {
-            text: 'Time',
-          },
-          labels: {
-            format: '{value:%H}',
-            step: 1,
-            rotation: 0,
-          },
-          tickInterval: 6 * 3600 * 1000, // 6 hours
-          minTickInterval: 6 * 3600 * 1000,
-          startOnTick: true,
-          endOnTick: false,
-          min: this.calculateMinX(),
-          max: this.calculateMaxX(),
-          tickPositioner: function () {
-            const start =
-              Math.floor(this.dataMin / (24 * 3600 * 1000)) *
-                24 *
-                3600 *
-                1000; // Start at midnight of the current day
-            const positions = [];
-            for (let i = start; i <= this.dataMax; i += 6 * 3600 * 1000) {
-              positions.push(i);
-            }
-            return positions;
+            crosshair: true,
+            title: {
+              text: 'Time',
+            },
+            labels: {
+              format: '{value:%H}',
+              step: 1,
+              rotation: 0,
+            },
+            tickInterval: 6 * 3600 * 1000, // 6 hours
+            minTickInterval: 6 * 3600 * 1000,
+            startOnTick: true,
+            endOnTick: false,
+            min: this.calculateMinX(),
+            max: this.calculateMaxX(),
+            tickPositioner: function () {
+              const start =
+                Math.floor(this.dataMin / (24 * 3600 * 1000)) * 24 * 3600 * 1000 // Start at midnight of the current day
+              const positions = []
+              for (let i = start; i <= this.dataMax; i += 6 * 3600 * 1000) {
+                positions.push(i)
+              }
+              return positions
             },
           },
           {
@@ -708,38 +769,41 @@ document.addEventListener('DOMContentLoaded', () => {
       weatherHighChartContainer.style.display === 'none' ||
       weatherHighChartContainer.style.display === ''
     ) {
-      weatherHighChartContainer.style.display = 'block';
-      toggleWeatherChartButton.src = '/static/images/point-up-512.png';
-      toggleWeatherChartButton.alt = 'Hide Weather High Chart';
-  
+      weatherHighChartContainer.style.display = 'block'
+      toggleWeatherChartButton.src = '/static/images/point-up-512.png'
+      toggleWeatherChartButton.alt = 'Hide Weather High Chart'
+
       // Use setTimeout to delay the scroll action
       setTimeout(() => {
         // Scroll to the top of the weather high chart container
-        weatherHighChartContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100); // Adjust the delay as needed (100 milliseconds here)
-  
+        weatherHighChartContainer.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        })
+      }, 100) // Adjust the delay as needed (100 milliseconds here)
+
       if (window.weatherChartData && !window.weatherChartRendered) {
-        renderTemperatureRangeChart(window.weatherChartData);
-        window.weatherChartRendered = true;
+        renderTemperatureRangeChart(window.weatherChartData)
+        window.weatherChartRendered = true
       }
-  
+
       if (window.weatherData && !window.meteogramRendered) {
         window.meteogram = new Meteogram(
           window.weatherData,
           'meteogram-container'
-        );
-        window.meteogramRendered = true;
-        meteogramContainer.style.display = 'block'; // Ensure container is visible
+        )
+        window.meteogramRendered = true
+        meteogramContainer.style.display = 'block' // Ensure container is visible
       } else {
-        meteogramContainer.style.display = 'block'; // Show container even if already rendered
+        meteogramContainer.style.display = 'block' // Show container even if already rendered
       }
     } else {
-      weatherHighChartContainer.style.display = 'none';
-      toggleWeatherChartButton.src = '/static/images/point-down-512.png';
-      toggleWeatherChartButton.alt = 'Show Weather High Chart';
+      weatherHighChartContainer.style.display = 'none'
+      toggleWeatherChartButton.src = '/static/images/point-down-512.png'
+      toggleWeatherChartButton.alt = 'Show Weather High Chart'
     }
-  });
-  
+  })
+
   form.addEventListener('reset', () => {
     // Hide all result sections
     weatherResults.style.display = 'none'

@@ -4,14 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
-    
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/home.css') }}"
-    />
-    <link
       href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="/static/home.css">
+    <script src="static/script.js"></script>
     <!-- Highcharts Scripts -->
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/highcharts-more.js"></script>
@@ -23,8 +20,7 @@
 <script src="https://code.highcharts.com/modules/data.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-    <!-- Your Main JavaScript File -->
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
     <title>Weather App</title>
   </head>
   <body>
@@ -52,9 +48,7 @@
                 <label for="state">State</label><br />
                 <select id="state" name="state">
                   <option value="">Select your state</option>
-                  {% for state in states %}
-                  <option value="{{ state }}">{{ state }}</option>
-                  {% endfor %}
+                  
                 </select>
                 <span class="tooltip" id="state-tooltip"></span>
               </div>
@@ -188,8 +182,8 @@
         <div class="weather-card">
           <div class="top-section">
             <div class="left-section">
-              <h3 id="card-date">Date Placeholder</h3>
-              <span id="card-status-text">Status Placeholder</span>
+              <h3 id="card-date" style="font-family: Lato !important;">Date Placeholder</h3>
+              <span id="card-status-text" style="font-family: Lato !important;">Status Placeholder</span>
               <p id="card-temperature-range" class="temperature-range">
                 Temp Range Placeholder
               </p>
