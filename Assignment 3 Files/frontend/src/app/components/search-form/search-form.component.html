@@ -1,0 +1,178 @@
+<div class="container mt-2">
+  <div class="card">
+    <div class="text-center">
+      <h2>Weather Search ⛅</h2>
+    </div>
+
+    <div class="card-body">
+      <form [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+        <!-- Street -->
+        <div class="row mb-3">
+          <label for="street" class="col-md-2 form-label mb-0">
+            Street<span class="text-danger">*</span>
+          </label>
+          <div class="col-md-8">
+            <input
+              type="text"
+              id="street"
+              formControlName="street"
+              class="form-control"
+              [class.is-invalid]="searchForm.get('street')?.invalid && searchForm.get('street')?.touched"
+            />
+            @if (searchForm.get('street')?.invalid && searchForm.get('street')?.touched) {
+              <div class="invalid-feedback">Please enter a street address</div>
+            }
+          </div>
+        </div>
+
+        <!-- City -->
+        <div class="row mb-3">
+          <label for="city" class="col-md-2 form-label mb-0">
+            City<span class="text-danger">*</span>
+          </label>
+          <div class="col-md-8">
+            <input
+              type="text"
+              id="city"
+              formControlName="city"
+              class="form-control"
+              [class.is-invalid]="searchForm.get('city')?.invalid && searchForm.get('city')?.touched"
+              [matAutocomplete]="auto"
+            />
+            <mat-autocomplete 
+              #auto="matAutocomplete" 
+              [displayWith]="displayFn"
+              (optionSelected)="onOptionSelected($event)"
+            >
+              @for (prediction of filteredCities$ | async; track prediction.description) {
+                <mat-option [value]="prediction">
+                  {{ prediction.city }}
+                </mat-option>
+              }
+            </mat-autocomplete>
+            @if (searchForm.get('city')?.invalid && searchForm.get('city')?.touched) {
+              <div class="invalid-feedback">Please enter a city</div>
+            }
+          </div>
+        </div>
+
+        <!-- State -->
+        <div class="row mb-3">
+          <label for="state" class="col-md-2 form-label mb-0">
+            State<span class="text-danger">*</span>
+          </label>
+          <div class="col-md-4">
+            <select
+              id="state"
+              formControlName="state"
+              class="form-select"
+              [class.is-invalid]="searchForm.get('state')?.invalid && searchForm.get('state')?.touched"
+            >
+              <option value="">Select your state</option>
+              @for (state of states; track state) {
+                <option [value]="state">{{ state }}</option>
+              }
+            </select>
+            @if (searchForm.get('state')?.invalid && searchForm.get('state')?.touched) {
+              <div class="invalid-feedback">Please select a state</div>
+            }
+          </div>
+        </div>
+
+        <hr>
+
+        <!-- Current Location -->
+        <div class="row mb-3">
+          <div class="col-12 d-flex justify-content-center align-items-center">
+            <span class="me-2">Autodetect Location<span class="text-danger">*</span></span>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="useCurrentLocation" formControlName="useCurrentLocation">
+              <label class="form-check-label" for="useCurrentLocation">Current Location</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="row">
+          <div class="col-12 d-flex justify-content-center gap-2">
+            <button type="submit" class="btn btn-primary" 
+              [disabled]="!searchForm.valid && !searchForm.get('useCurrentLocation')?.value">
+              Search
+            </button>
+            <button type="button" class="btn btn-outline-secondary" (click)="onClear()">
+              <i class="bi bi-list-nested"></i>
+              Clear
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="row mt-2">
+    <div class="col-md-10 offset-md-1">
+      <div class="d-flex gap-4 justify-content-center align-items-center">
+        <button class="btn" [class.btn-primary]="activeTab === 'results'" 
+          (click)="switchTab('results')">Results</button>
+        <button class="btn" [class.btn-primary]="activeTab === 'favorites'" 
+          (click)="switchTab('favorites')">Favorites</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="text-center mt-3">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="alert alert-danger mt-3">
+    {{error}}
+  </div>
+
+  <!-- Previous form content remains the same -->
+
+  @if (weatherData && showResults && activeTab === 'results') {
+  <div class="mt-4">
+    <h3 class="text-center">Forecast at {{ currentLocation?.city }}, {{ currentLocation?.state }}</h3>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Date</th>
+            <th class="text-start">Status</th>
+            <th>Temp. High(°F)</th>
+            <th>Temp. Low(°F)</th>
+            <th>Wind Speed(mph)</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (day of weatherData; track day.startTime; let i = $index) {
+            <tr>
+              <td>{{ i + 1}}</td>
+              <td>{{ day.startTime | date:'fullDate' }}</td>
+              <td class="text-start">
+                <div class="d-flex align-items-center">
+                  <img [src]="'assets/weather-icons/' + getWeatherIcon(day.values.weatherCode)" 
+                       [alt]="getWeatherDescription(day.values.weatherCode)"
+                       class="weather-icon me-2"
+                       width="24"
+                       height="24">
+                  {{ getWeatherDescription(day.values.weatherCode) }}
+                </div>
+              </td>
+              <td>{{ day.values.temperatureMax | number:'1.0-1' }}</td>
+              <td>{{ day.values.temperatureMin | number:'1.0-1' }}</td>
+              <td>{{ day.values.windSpeed | number:'1.0-1' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}
+</div>
