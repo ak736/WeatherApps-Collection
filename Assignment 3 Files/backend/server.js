@@ -62,6 +62,7 @@ async function getWeatherData(lat, lon) {
           'temperature',
           'temperatureMax',
           'temperatureMin',
+          'temperatureApparent',
           'weatherCode',
           'windSpeed',
           'precipitationProbability',

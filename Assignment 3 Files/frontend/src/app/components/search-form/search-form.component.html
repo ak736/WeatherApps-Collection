@@ -17,10 +17,14 @@
               id="street"
               formControlName="street"
               class="form-control"
-              [class.is-invalid]="searchForm.get('street')?.invalid && searchForm.get('street')?.touched"
+              [class.is-invalid]="
+                searchForm.get('street')?.invalid &&
+                searchForm.get('street')?.touched
+              "
             />
-            @if (searchForm.get('street')?.invalid && searchForm.get('street')?.touched) {
-              <div class="invalid-feedback">Please enter a street address</div>
+            @if (searchForm.get('street')?.invalid &&
+            searchForm.get('street')?.touched) {
+            <div class="invalid-feedback">Please enter a street address</div>
             }
           </div>
         </div>
@@ -36,22 +40,27 @@
               id="city"
               formControlName="city"
               class="form-control"
-              [class.is-invalid]="searchForm.get('city')?.invalid && searchForm.get('city')?.touched"
+              [class.is-invalid]="
+                searchForm.get('city')?.invalid &&
+                searchForm.get('city')?.touched
+              "
               [matAutocomplete]="auto"
             />
-            <mat-autocomplete 
-              #auto="matAutocomplete" 
+            <mat-autocomplete
+              #auto="matAutocomplete"
               [displayWith]="displayFn"
               (optionSelected)="onOptionSelected($event)"
             >
-              @for (prediction of filteredCities$ | async; track prediction.description) {
-                <mat-option [value]="prediction">
-                  {{ prediction.city }}
-                </mat-option>
+              @for (prediction of filteredCities$ | async; track
+              prediction.description) {
+              <mat-option [value]="prediction">
+                {{ prediction.city }}
+              </mat-option>
               }
             </mat-autocomplete>
-            @if (searchForm.get('city')?.invalid && searchForm.get('city')?.touched) {
-              <div class="invalid-feedback">Please enter a city</div>
+            @if (searchForm.get('city')?.invalid &&
+            searchForm.get('city')?.touched) {
+            <div class="invalid-feedback">Please enter a city</div>
             }
           </div>
         </div>
@@ -66,28 +75,41 @@
               id="state"
               formControlName="state"
               class="form-select"
-              [class.is-invalid]="searchForm.get('state')?.invalid && searchForm.get('state')?.touched"
+              [class.is-invalid]="
+                searchForm.get('state')?.invalid &&
+                searchForm.get('state')?.touched
+              "
             >
               <option value="">Select your state</option>
               @for (state of states; track state) {
-                <option [value]="state">{{ state }}</option>
+              <option [value]="state">{{ state }}</option>
               }
             </select>
-            @if (searchForm.get('state')?.invalid && searchForm.get('state')?.touched) {
-              <div class="invalid-feedback">Please select a state</div>
+            @if (searchForm.get('state')?.invalid &&
+            searchForm.get('state')?.touched) {
+            <div class="invalid-feedback">Please select a state</div>
             }
           </div>
         </div>
 
-        <hr>
+        <hr />
 
         <!-- Current Location -->
         <div class="row mb-3">
           <div class="col-12 d-flex justify-content-center align-items-center">
-            <span class="me-2">Autodetect Location<span class="text-danger">*</span></span>
+            <span class="me-2"
+              >Autodetect Location<span class="text-danger">*</span></span
+            >
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="useCurrentLocation" formControlName="useCurrentLocation">
-              <label class="form-check-label" for="useCurrentLocation">Current Location</label>
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="useCurrentLocation"
+                formControlName="useCurrentLocation"
+              />
+              <label class="form-check-label" for="useCurrentLocation"
+                >Current Location</label
+              >
             </div>
           </div>
         </div>
@@ -95,11 +117,21 @@
         <!-- Buttons -->
         <div class="row">
           <div class="col-12 d-flex justify-content-center gap-2">
-            <button type="submit" class="btn btn-primary" 
-              [disabled]="!searchForm.valid && !searchForm.get('useCurrentLocation')?.value">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="
+                !searchForm.valid &&
+                !searchForm.get('useCurrentLocation')?.value
+              "
+            >
               Search
             </button>
-            <button type="button" class="btn btn-outline-secondary" (click)="onClear()">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="onClear()"
+            >
               <i class="bi bi-list-nested"></i>
               Clear
             </button>
@@ -110,13 +142,23 @@
   </div>
 
   <!-- Tabs -->
-  <div class="row mt-2">
+  <div class="row mt-4">
     <div class="col-md-10 offset-md-1">
       <div class="d-flex gap-4 justify-content-center align-items-center">
-        <button class="btn" [class.btn-primary]="activeTab === 'results'" 
-          (click)="switchTab('results')">Results</button>
-        <button class="btn" [class.btn-primary]="activeTab === 'favorites'" 
-          (click)="switchTab('favorites')">Favorites</button>
+        <button
+          class="btn"
+          [class.btn-primary]="activeTab === 'results'"
+          (click)="switchTab('results')"
+        >
+          Results
+        </button>
+        <button
+          class="btn"
+          [class.btn-primary]="activeTab === 'favorites'"
+          (click)="switchTab('favorites')"
+        >
+          Favorites
+        </button>
       </div>
     </div>
   </div>
@@ -130,21 +172,70 @@
 
   <!-- Error Message -->
   <div *ngIf="error" class="alert alert-danger mt-3">
-    {{error}}
+    {{ error }}
   </div>
 
-  <!-- Previous form content remains the same -->
-
+  <!-- Results Section -->
   @if (weatherData && showResults && activeTab === 'results') {
   <div class="mt-4">
-    <h3 class="text-center">Forecast at {{ currentLocation?.city }}, {{ currentLocation?.state }}</h3>
+    <div class="mb-3">
+      <h3 class="mb-0 text-center" style="font-size: 1.5rem; font-weight: bold;">
+        Forecast at {{ currentLocation?.city }}, {{ currentLocation?.state }}
+      </h3>
+      <div class="d-flex justify-content-end align-items-center gap-2 mt-2">
+        <i
+          class="bi bi-star-fill"
+          style="color: #f0ce0d; cursor: pointer; font-size: 1.2rem"
+        ></i>
+        <span>Details</span>
+        <span class="material-icons">navigate_next</span>
+      </div>
+    </div>
+
+    <!-- Container for both nav-tabs and content -->
+    <div class="row">
+      <!-- Tabs moved to the left -->
+      <div class="col-12">
+        <ul class="nav nav-tabs d-flex justify-content-end">
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [class.active]="currentView === 'day'"
+              (click)="switchView('day')"
+              style="cursor: pointer"
+              >Day View</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [class.active]="currentView === 'temp'"
+              (click)="switchView('temp')"
+              style="cursor: pointer"
+              >Daily Temp. Chart</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [class.active]="currentView === 'meteogram'"
+              (click)="switchView('meteogram')"
+              style="cursor: pointer"
+              >Meteogram</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-3">
+    @if (currentView === 'day') {
     <div class="table-responsive">
       <table class="table">
         <thead>
-          <tr>
+          <tr style="font-weight: bold;">
             <th>#</th>
             <th>Date</th>
-            <th class="text-start">Status</th>
+            <th>Status</th>
             <th>Temp. High(°F)</th>
             <th>Temp. Low(°F)</th>
             <th>Wind Speed(mph)</th>
@@ -152,27 +243,43 @@
         </thead>
         <tbody>
           @for (day of weatherData; track day.startTime; let i = $index) {
-            <tr>
-              <td>{{ i + 1}}</td>
-              <td>{{ day.startTime | date:'fullDate' }}</td>
-              <td class="text-start">
-                <div class="d-flex align-items-center">
-                  <img [src]="'assets/weather-icons/' + getWeatherIcon(day.values.weatherCode)" 
-                       [alt]="getWeatherDescription(day.values.weatherCode)"
-                       class="weather-icon me-2"
-                       width="24"
-                       height="24">
-                  {{ getWeatherDescription(day.values.weatherCode) }}
-                </div>
-              </td>
-              <td>{{ day.values.temperatureMax | number:'1.0-1' }}</td>
-              <td>{{ day.values.temperatureMin | number:'1.0-1' }}</td>
-              <td>{{ day.values.windSpeed | number:'1.0-1' }}</td>
-            </tr>
+          <tr>
+            <td style="font-weight: bold;">{{ i + 1 }}</td>
+            <td>{{ day.startTime | date : "fullDate" }}</td>
+            <td class="text-start">
+              <div class="d-flex align-items-center">
+                <img
+                  [src]="
+                    'assets/weather-icons/' +
+                    getWeatherIcon(day.values.weatherCode)
+                  "
+                  [alt]="getWeatherDescription(day.values.weatherCode)"
+                  class="weather-icon me-2"
+                  width="24"
+                  height="24"
+                />
+                {{ getWeatherDescription(day.values.weatherCode) }}
+              </div>
+            </td>
+            <td>{{ day.values.temperatureMax | number : "1.0-1" }}</td>
+            <td>{{ day.values.temperatureMin | number : "1.0-1" }}</td>
+            <td>{{ day.values.windSpeed | number : "1.0-1" }}</td>
+          </tr>
           }
         </tbody>
       </table>
     </div>
+    } @if (currentView === 'temp') {
+    <div class="text-center">
+      <app-daily-temp-chart></app-daily-temp-chart>
+    </div>
+    } @if (currentView === 'meteogram') {
+    <div class="text-center">
+      <app-meteogram></app-meteogram>
+    </div>
+    }
   </div>
-}
+  </div>
+  }
+  
 </div>
