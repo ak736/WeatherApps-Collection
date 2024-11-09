@@ -1,12 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-weather-details',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './weather-details.component.html',
-  styleUrl: './weather-details.component.css'
+  styleUrls: ['./weather-details.component.css']
 })
 export class WeatherDetailsComponent {
+  @Output() daySelected = new EventEmitter<any>();
 
+  weatherData: any[] = []; // Assuming you have weather data available
+
+  showDetails(day: any) {
+    this.daySelected.emit(day);
+  }
 }

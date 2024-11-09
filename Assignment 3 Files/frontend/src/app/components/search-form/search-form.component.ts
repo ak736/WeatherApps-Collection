@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -21,6 +21,9 @@ import { WeatherResponse } from '../../interfaces/weather.interface';
 import { HttpClient } from '@angular/common/http';
 import { DailyTempChartComponent } from '../daily-temp-chart/daily-temp-chart.component';
 import { MeteogramComponent } from '../meteogram/meteogram.component';
+import { DetailsPaneComponent } from '../details-pane/details-pane.component';
+import { trigger, transition, style, animate } from '@angular/animations';
+
 
 @Component({
   selector: 'app-search-form',
@@ -33,6 +36,18 @@ import { MeteogramComponent } from '../meteogram/meteogram.component';
     MatFormFieldModule,
     DailyTempChartComponent,
     MeteogramComponent,
+    DetailsPaneComponent
+  ],
+  animations: [
+    trigger('slideAnimation', [
+      transition(':enter', [
+        style({ transform: 'translateX(100%)', position: 'absolute' }),
+        animate('300ms ease-out', style({ transform: 'translateX(0)' }))
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in', style({ transform: 'translateX(100%)' }))
+      ])
+    ])
   ],
   templateUrl: './search-form.component.html',
   styleUrl: './search-form.component.css',
@@ -46,6 +61,23 @@ export class SearchFormComponent implements OnInit {
   activeTab: 'results' | 'favorites' = 'results';
   showResults = false;
   currentLocation: { city: string; state: string } | null = null;
+  @Output() daySelected = new EventEmitter<any>();
+  @Output() locationChange = new EventEmitter<any>();
+  day: any;
+  showDetails = false;
+  selectedDayDetails: any = null;
+ // Update the onDaySelected method
+onDaySelected(selectedDay: any): void {
+  this.selectedDayDetails = selectedDay;
+  this.showDetails = true;
+}
+
+// Add this method
+onBackToList() {
+  this.showDetails = false;
+  this.selectedDayDetails = null;
+}
+
   // Add to existing properties
   currentView: 'day' | 'temp' | 'meteogram' = 'day';
 
@@ -142,7 +174,6 @@ export class SearchFormComponent implements OnInit {
           const formControl = this.searchForm.get(control);
           if (checked) {
             formControl?.disable();
-            // this.fetchWeatherUsingCurrentLocation();
           } else {
             formControl?.enable();
           }
@@ -213,6 +244,7 @@ export class SearchFormComponent implements OnInit {
           ...interval.values,
           // If weatherCode is missing, use the one from minutely data
           weatherCode: interval.values.weatherCode,
+          temperatureApparent: interval.values.temperatureApparent,
           // Ensure windSpeed is properly mapped
           windSpeed: interval.values.windSpeed,
         },
@@ -244,6 +276,11 @@ export class SearchFormComponent implements OnInit {
             city: response.location.city,
             state: response.location.state,
           };
+          this.locationChange.emit({
+            city: response.location.city,
+            state: response.location.state,
+            weatherData: filteredIntervals
+          });
           this.isLoading = false;
           this.activeTab = 'results';
         },
@@ -286,6 +323,12 @@ export class SearchFormComponent implements OnInit {
             city: params.city,
             state: params.state,
           };
+          this.locationChange.emit({
+            street: params.street,
+            city: params.city,
+            state: params.state,
+            weatherData: filteredIntervals
+          });
           this.isLoading = false;
           this.activeTab = 'results';
         },

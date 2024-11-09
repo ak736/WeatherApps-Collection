@@ -1,0 +1,88 @@
+.details-pane-content {
+  height: 100%;
+  background: white;
+}
+
+.card {
+  height: 100%;
+  border: none;
+  border-radius: 0;
+}
+
+.card-header {
+  background: transparent;
+  padding: 1rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.card-body {
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.material-icons {
+  font-size: 16px;
+  color: black;
+}
+
+.card-header {
+  background: transparent;
+  padding: 1rem;
+  border-bottom: 1px solid #dee2e6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.back-btn {
+  border: 1px solid #dee2e6;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 80px;
+  justify-content: center;
+}
+.tweet-btn {
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 6px 12px;
+  min-width: 40px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+
+}
+
+
+
+.date-text {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.card-body {
+  padding: 0;
+}
+
+.table td {
+  padding: 0.75rem 1rem;
+  border-color: #dee2e6;
+}
+
+.table tr:nth-child(odd) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.material-icons {
+  font-size: 16px;
+  color: black;
+}
+
+.tweet-btn {
+  text-decoration: none;
+  color: black;
+}
+/* Remove any position: fixed or position: absolute from here */

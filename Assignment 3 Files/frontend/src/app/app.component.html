@@ -1,1 +1,2 @@
-<app-search-form></app-search-form>
+<app-search-form (daySelected)="onDaySelected($event)"></app-search-form>
+<app-details-pane *ngIf="selectedDay" [weatherDetails]="selectedDay"></app-details-pane>

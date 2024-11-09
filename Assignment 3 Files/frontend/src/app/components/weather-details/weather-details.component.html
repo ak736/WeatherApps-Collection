@@ -1,1 +1,13 @@
-<p>weather-details works!</p>
+<div class="weather-details">
+  <table class="table">
+    <tbody>
+      <tr *ngFor="let day of weatherData">
+        <td>{{ day.date }}</td>
+        <td>{{ day.temperature }}</td>
+        <td>
+          <button class="btn btn-link" (click)="showDetails(day)">Details</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

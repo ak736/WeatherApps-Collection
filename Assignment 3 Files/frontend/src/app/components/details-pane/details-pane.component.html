@@ -1,0 +1,41 @@
+<div class="details-pane">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <button
+        class="btn btn-outline-secondary d-flex align-items-center"
+        (click)="back.emit()"
+      >
+        <span class="material-icons">arrow_back_ios</span>
+        List
+      </button>
+      <h2 class="mb-0 date-text">
+        {{ weatherDetails?.startTime | date : "fullDate" }}
+      </h2>
+      <button class="btn btn-outline-secondary tweet-btn" (click)="getTweetUrl()" target="_blank">
+        <i class="bi bi-twitter-x"></i>
+      </button>
+    </div>
+    <div class="card-body px-0">
+      <table class="table table-striped mb-0">
+        <tbody>
+          <tr>
+            <td>Status</td>
+            <td>{{ weatherDetails?.values?.weatherCode }}</td>
+          </tr>
+          <tr>
+            <td>Max Temperature</td>
+            <td>{{ weatherDetails?.values?.temperatureMax }}°F</td>
+          </tr>
+          <tr>
+            <td>Min Temperature</td>
+            <td>{{ weatherDetails?.values?.temperatureMin }}°F</td>
+          </tr>
+          <tr>
+            <td>Wind Speed</td>
+            <td>{{ weatherDetails?.values?.windSpeed }}mph</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
