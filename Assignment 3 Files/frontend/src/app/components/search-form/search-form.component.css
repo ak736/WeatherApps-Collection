@@ -134,6 +134,30 @@
   overflow-y: auto;
 }
 
+.icon-details-container {
+  gap: 4px; /* Reduce gap to bring the icon and text closer */
+}
+
+.icon-square {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 35px; /* Adjust the width to make it square */
+  height: 35px; /* Adjust the height to make it square */
+  border: 1px solid #000000;
+  border-radius: 4px;
+  font-size: 1.2rem;
+  background-color: white;
+  cursor: pointer;
+}
+
+.details-button {
+  color: #0d6efd;
+  font-size: 1.1rem;
+  padding: 0; /* Remove padding for closer spacing */
+  text-decoration: underline;
+}
+
 
 .form-control.ng-invalid.ng-touched,
 .form-select.ng-invalid.ng-touched {
@@ -182,6 +206,15 @@ img.weather-icon {
   display: block;
 }
 
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  padding: 0.75rem 1.25rem;
+  margin: 1rem 0;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+}
 
 /* Responsive adjustments */
 @media (max-width: 768px) {

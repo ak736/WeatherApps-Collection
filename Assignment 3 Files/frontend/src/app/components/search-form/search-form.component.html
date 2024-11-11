@@ -1,6 +1,7 @@
 <div class="container mt-2">
+  <!-- Search Card -->
   <div class="card">
-    <div class="text-center">
+    <div class="text-center mt-4">
       <h2>Weather Search ⛅</h2>
     </div>
 
@@ -97,9 +98,9 @@
         <!-- Current Location -->
         <div class="row mb-3">
           <div class="col-12 d-flex justify-content-center align-items-center">
-            <span class="me-2"
-              >Autodetect Location<span class="text-danger">*</span></span
-            >
+            <span class="me-2">
+              Autodetect Location<span class="text-danger">*</span>
+            </span>
             <div class="form-check">
               <input
                 class="form-check-input"
@@ -107,9 +108,9 @@
                 id="useCurrentLocation"
                 formControlName="useCurrentLocation"
               />
-              <label class="form-check-label" for="useCurrentLocation"
-                >Current Location</label
-              >
+              <label class="form-check-label" for="useCurrentLocation">
+                Current Location
+              </label>
             </div>
           </div>
         </div>
@@ -160,13 +161,31 @@
           Favorites
         </button>
       </div>
+
+      <!-- Tab Content -->
+      @if (activeTab === 'results') {
+      <!-- Results Content will be rendered by the Results Section below -->
+      } @else if (activeTab === 'favorites') {
+      <app-favorites-table />
+      }
     </div>
   </div>
 
-  <!-- Loading Spinner -->
-  <div *ngIf="isLoading" class="text-center mt-3">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Loading...</span>
+  <!-- Loading Progress Bar -->
+  <div *ngIf="isLoading" class="row mt-3">
+    <div class="col-md-8 offset-md-2">
+      <div
+        class="progress"
+        role="progressbar"
+        [attr.aria-valuenow]="loadingProgress"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      >
+        <div
+          class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+          [style.width.%]="loadingProgress"
+        ></div>
+      </div>
     </div>
   </div>
 
@@ -180,7 +199,6 @@
   <div class="mt-4">
     <div class="weather-content-wrapper position-relative">
       <div *ngIf="!showDetails" [@slideAnimation]>
-        <!-- @if (!showDetails) { -->
         <div class="mb-3">
           <h3
             class="mb-0 text-center"
@@ -190,18 +208,23 @@
             {{ currentLocation?.state }}
           </h3>
         </div>
+
         <!-- Main View -->
         <div class="weather-main-view">
           <!-- Details and Navigation -->
           <div
-            class="d-flex justify-content-end align-items-center gap-2 mt-2 mb-3"
+            class="d-flex justify-content-end align-items-center icon-details-container gap-1 mt-2 mb-3"
           >
-            <i
-              class="bi bi-star-fill"
-              style="color: #f0ce0d; cursor: pointer; font-size: 1.2rem"
-            ></i>
+            <span
+              class="material-icons"
+              [style.color]="isFavorite ? '#FFD700' : 'grey'"
+              (click)="toggleFavorite()"
+              style="cursor: pointer"
+            >
+              {{ isFavorite ? "star" : "star_border" }}
+            </span>
             <button
-              class="btn btn-link"
+              class="btn btn-link details-button"
               (click)="onDaySelected(weatherData[0])"
             >
               Details
@@ -209,7 +232,7 @@
             </button>
           </div>
 
-          <!-- Tabs -->
+          <!-- View Tabs -->
           <div class="row">
             <div class="col-12">
               <ul class="nav nav-tabs d-flex justify-content-end">
@@ -264,7 +287,7 @@
                   {
                   <tr style="cursor: pointer" (click)="onDaySelected(day)">
                     <td style="font-weight: bold">{{ i + 1 }}</td>
-                    <td>{{ day.startTime | date : "fullDate" }}</td>
+                    <td style="color: #0d6efd; text-decoration: underline;">{{ day.startTime | date : 'EEEE, MMM. d, y' }}</td>
                     <td class="text-start">
                       <div class="d-flex align-items-center">
                         <img
@@ -288,16 +311,15 @@
                 </tbody>
               </table>
             </div>
-            } @if (currentView === 'temp') {
+            } @else if (currentView === 'temp') {
             <app-daily-temp-chart
               [weatherData]="weatherData"
             ></app-daily-temp-chart>
-            } @if (currentView === 'meteogram') {
+            } @else if (currentView === 'meteogram') {
             <app-meteogram
               [weatherData]="meteogramData"
               [location]="currentLocation"
-            >
-            </app-meteogram>
+            ></app-meteogram>
             }
           </div>
         </div>

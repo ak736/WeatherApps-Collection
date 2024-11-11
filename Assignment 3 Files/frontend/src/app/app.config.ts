@@ -12,6 +12,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withFetch()),
     provideAnimations(),
+    provideHttpClient(),
     importProvidersFrom(HighchartsChartModule),
   ]
 };

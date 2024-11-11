@@ -13,7 +13,7 @@ import {
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { Observable, of } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, finalize, take } from 'rxjs/operators';
 import { GooglePlacesService } from '../../services/google-places.service';
 import { PlacePrediction } from '../../interfaces/place-prediction.interface';
 import { WeatherUtilsService } from '../../services/weather-utils.service';
@@ -24,6 +24,8 @@ import { MeteogramComponent } from '../meteogram/meteogram.component';
 import { DetailsPaneComponent } from '../details-pane/details-pane.component';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { LocationInfo } from '../../interfaces/weather.interface'; // Add this import
+import { FavoritesService } from '../../services/favourites.service'; 
+import { FavoritesTableComponent } from '../favorites-table/favorites-table.component';  // Add this import
 
 interface ProcessedData {
   hourly: any[];
@@ -40,6 +42,7 @@ interface MeteogramDataPoint {
     windDirection: number;
   };
 }
+type TabType = 'results' | 'favorites';
 
 @Component({
   selector: 'app-search-form',
@@ -53,6 +56,7 @@ interface MeteogramDataPoint {
     DailyTempChartComponent,
     MeteogramComponent,
     DetailsPaneComponent,
+    FavoritesTableComponent
   ],
   animations: [
     trigger('slideAnimation', [
@@ -81,7 +85,15 @@ export class SearchFormComponent implements OnInit {
   weatherData: any = null;
   isLoading = false;
   error: string | null = null;
-  activeTab: 'results' | 'favorites' = 'results';
+  isFavorite = false;
+  activeTab: TabType = 'results';  // Initialize with type safety
+  loadingProgress = 75;
+  private progressInterval: any;
+  
+  
+  switchTab(tab: TabType) {  // Type-safe parameter
+    this.activeTab = tab;
+  }
   showResults = false;
   currentLocation: LocationInfo | null = null;
   @Output() daySelected = new EventEmitter<any>();
@@ -173,9 +185,20 @@ export class SearchFormComponent implements OnInit {
     private fb: FormBuilder,
     private placesService: GooglePlacesService,
     private http: HttpClient,
-    private weatherUtils: WeatherUtilsService
+    private weatherUtils: WeatherUtilsService,
+    private favoritesService: FavoritesService,
   ) {
     this.initForm();
+  }
+ 
+
+  addToFavorites() {
+    if (this.currentLocation) {
+      this.favoritesService.addFavorite(
+        this.currentLocation.city,
+        this.currentLocation.state
+      );
+    }
   }
 
   getWeatherDescription(code: number): string {
@@ -218,8 +241,21 @@ export class SearchFormComponent implements OnInit {
         return this.placesService.getPlacePredictions(value);
       })
     );
+    this.checkIfFavorite();
   }
-
+  // Add this method to check favorite status
+  private checkIfFavorite(): void {
+    if (this.currentLocation) {
+      this.favoritesService.isFavorite(
+        this.currentLocation.city,
+        this.currentLocation.state
+      ).subscribe({
+        next: (isFav: boolean) => {  // Add type annotation here
+          this.isFavorite = isFav;
+        }
+      });
+    }
+  }
   displayFn = (prediction: any): string => {
     if (!prediction) return '';
     return typeof prediction === 'object' ? prediction.city : prediction;
@@ -235,10 +271,6 @@ export class SearchFormComponent implements OnInit {
     }
   };
 
-  switchTab(tab: 'results' | 'favorites'): void {
-    this.activeTab = tab;
-  }
-
   // search-form.component.ts
   onSubmit(): void {
     if (
@@ -248,7 +280,7 @@ export class SearchFormComponent implements OnInit {
       return;
     }
 
-    this.isLoading = true;
+    this.handleLoadingState(true);
     this.error = null;
     this.showResults = true; // Set this to true when search is clicked
 
@@ -288,6 +320,47 @@ export class SearchFormComponent implements OnInit {
       })
       .slice(0, 7);
   }
+  // Update your existing method that handles loading state
+  private async handleLoadingState(loading: boolean) {
+    if (!loading) {
+      // Immediately clear everything when loading is false
+      if (this.progressInterval) {
+        clearInterval(this.progressInterval);
+        this.progressInterval = null;
+      }
+      this.loadingProgress = 0;
+      this.isLoading = false;
+      await Promise.resolve();
+      return;
+    }
+    
+    this.isLoading = true;
+    this.loadingProgress = 0;
+    this.simulateProgress();
+  }
+
+  private simulateProgress() {
+    // Clear any existing interval first
+    if (this.progressInterval) {
+      clearInterval(this.progressInterval);
+    }
+    
+    this.progressInterval = setInterval(() => {
+      if (this.isLoading && this.loadingProgress < 90) {
+        this.loadingProgress += 15;
+      } else {
+        clearInterval(this.progressInterval);
+        this.progressInterval = null;
+      }
+    }, 200);
+  }
+  ngOnDestroy() {
+    if (this.progressInterval) {
+      clearInterval(this.progressInterval);
+      this.progressInterval = null;
+    }
+  }
+
 
   public transformWeatherData(intervals: any[]): any[] {
     return intervals.map((interval) => ({
@@ -303,30 +376,40 @@ export class SearchFormComponent implements OnInit {
 
   // Update your fetchWeatherUsingCurrentLocation method
   fetchWeatherUsingCurrentLocation(): void {
-    this.isLoading = true;
+    this.handleLoadingState(true);
     this.error = null;
 
     this.http
       .get<WeatherResponse>('http://localhost:3000/api/location-weather')
       .pipe(
+        take(1),
         switchMap((response) => {
+          if (!response?.forecast?.data?.timelines?.[0]?.intervals) {
+            throw new Error('Unable to fetch weather data for current location');
+          }
           const filteredIntervals = this.filterCurrentAndFutureDates(
             response.forecast.data.timelines[0].intervals
           );
+          if (!filteredIntervals.length) {
+            throw new Error('No weather data available for current location');
+          }
           this.weatherData = filteredIntervals;
           this.currentLocation = {
             street: '',
             city: response.location.city,
             state: response.location.state,
-            lat: response.location.lat,
-            lon: response.location.lon,
+            lat: Number(response.location.lat), // Convert to number
+          lon: Number(response.location.lon)  // Convert to number
           };
 
           // Fetch meteogram data
           return this.fetchMeteogramData(
-            response.location.lat,
-            response.location.lon
-          );
+            Number(response.location.lat),
+            Number(response.location.lon)
+          ).pipe(take(1));
+        }),
+        finalize(() => {
+          this.handleLoadingState(false); // This ensures loading state is always cleared
         })
       )
       .subscribe({
@@ -341,15 +424,14 @@ export class SearchFormComponent implements OnInit {
             weatherData: this.weatherData,
             meteogramData: meteogramData,
           });
-          this.isLoading = false;
+          this.handleLoadingState(false);
           this.activeTab = 'results';
+          this.checkIfFavorite();
         },
         error: (error) => {
           console.error('Error:', error);
-          this.error =
-            'Failed to fetch weather data: ' +
-            (error.message || 'Unknown error');
-          this.isLoading = false;
+          this.error = error.message || 'An error occurred. Please try again later.';
+          // this.handleLoadingState(false);
         },
       });
   }
@@ -375,23 +457,33 @@ export class SearchFormComponent implements OnInit {
       })
       .pipe(
         switchMap((response) => {
+          if (!response?.forecast?.data?.timelines?.[0]?.intervals) {
+            throw new Error('Invalid address or no weather data available');
+          }
           const filteredIntervals = this.filterCurrentAndFutureDates(
             response.forecast.data.timelines[0].intervals
           );
+          if (!filteredIntervals.length) {
+            throw new Error('No weather data available for this location');
+          }
+          
           this.weatherData = filteredIntervals;
           this.currentLocation = {
             street: params.street,
             city: params.city,
             state: params.state,
-            lat: response.location.lat,
-            lon: response.location.lon,
+            lat: Number(response.location.lat), // Convert to number
+            lon: Number(response.location.lon)
           };
 
           // Fetch meteogram data
           return this.fetchMeteogramData(
-            response.location.lat,
-            response.location.lon
+            Number(response.location.lat),
+          Number(response.location.lon)
           );
+        }),
+        finalize(() => {
+          this.handleLoadingState(false); // This ensures loading state is always cleared
         })
       )
       .subscribe({
@@ -406,17 +498,36 @@ export class SearchFormComponent implements OnInit {
             weatherData: this.weatherData,
             meteogramData: meteogramData,
           });
-          this.isLoading = false;
+          this.handleLoadingState(false);
           this.activeTab = 'results';
+          this.checkIfFavorite();
         },
         error: (error) => {
           console.error('Error:', error);
-          this.error =
-            'Failed to fetch weather data: ' +
-            (error.message || 'Unknown error');
-          this.isLoading = false;
+          this.error = error.message || 'An error occurred. Please try again later.';
+          this.handleLoadingState(false);
         },
       });
+  }
+
+  toggleFavorite(): void {
+    if (!this.currentLocation) return;
+
+    if (this.isFavorite) {
+      this.favoritesService.removeFavorite(
+        this.currentLocation.city,
+        this.currentLocation.state
+      ).subscribe(() => {
+        this.isFavorite = false;
+      });
+    } else {
+      this.favoritesService.addFavorite(
+        this.currentLocation.city,
+        this.currentLocation.state
+      ).subscribe(() => {
+        this.isFavorite = true;
+      });
+    }
   }
 
   // Update your onClear method

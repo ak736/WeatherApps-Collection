@@ -1,0 +1,33 @@
+<div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>City</th>
+          <th>State</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="favorites.length === 0">
+          <td colspan="4">
+            <div class="alert alert-warning">
+              Sorry! No records found.
+            </div>
+          </td>
+        </tr>
+        <tr *ngFor="let favorite of favorites; let i = index">
+          <td>{{i + 1}}</td>
+          <td>
+            <a [routerLink]="" (click)="onCityClick(favorite.city)">{{favorite.city}}</a>
+          </td>
+          <td>{{favorite.state}}</td>
+          <td>
+            <button class="btn btn-link" (click)="removeFavorite(favorite.id)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

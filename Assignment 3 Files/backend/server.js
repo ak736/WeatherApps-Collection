@@ -1,8 +1,8 @@
 const express = require('express')
 const cors = require('cors')
 const axios = require('axios')
-const app = express()
-
+const mongoose = require('mongoose');
+const app = express();
 require('dotenv').config()
 
 app.use(
@@ -276,6 +276,53 @@ app.get('/api/address-weather', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch weather data' })
   }
 })
+
+// MongoDB connection
+mongoose.connect('mongodb+srv://aniketkir63:4CtyQURJMRzAaobN@weather-cluster.rctjc.mongodb.net/?retryWrites=true&w=majority&appName=Weather-Cluster', {
+})
+.then(() => console.log('Connected to MongoDB'))
+.catch(err => console.error('MongoDB connection error:', err));
+
+// Create MongoDB Schema and Model
+const favoriteSchema = new mongoose.Schema({
+  city: String,
+  state: String
+});
+
+const Favorite = mongoose.model('Favorite', favoriteSchema);
+
+// API Routes
+app.get('/api/favorites', async (req, res) => {
+  try {
+    const favorites = await Favorite.find();
+    res.json(favorites.map(favorite => ({
+      _id: favorite._id,
+      city: favorite.city,
+      state: favorite.state
+    })));
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/favorites', async (req, res) => {
+  try {
+    const favorite = new Favorite(req.body);
+    await favorite.save();
+    res.status(201).json(favorite);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.delete('/api/favorites/:id', async (req, res) => {
+  try {
+    await Favorite.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: 'Favorite deleted' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {

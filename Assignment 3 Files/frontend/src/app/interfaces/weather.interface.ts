@@ -31,8 +31,8 @@ export interface WeatherResponse {
 
 export interface LocationInfo {
   street?: string;
-  city?: string;
-  state?: string;
-  lat?: number | string;
-  lon?: number | string;
+  city: string;
+  state: string;
+  lat?: number;
+  lon?: number;
 }
