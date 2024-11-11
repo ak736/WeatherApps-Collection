@@ -23,7 +23,23 @@ import { DailyTempChartComponent } from '../daily-temp-chart/daily-temp-chart.co
 import { MeteogramComponent } from '../meteogram/meteogram.component';
 import { DetailsPaneComponent } from '../details-pane/details-pane.component';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { LocationInfo } from '../../interfaces/weather.interface'; // Add this import
 
+interface ProcessedData {
+  hourly: any[];
+  // Add other properties if needed
+}
+
+interface MeteogramDataPoint {
+  time: string;
+  values: {
+    temperature: number;
+    humidity: number;
+    pressure: number;
+    windSpeed: number;
+    windDirection: number;
+  };
+}
 
 @Component({
   selector: 'app-search-form',
@@ -36,18 +52,25 @@ import { trigger, transition, style, animate } from '@angular/animations';
     MatFormFieldModule,
     DailyTempChartComponent,
     MeteogramComponent,
-    DetailsPaneComponent
+    DetailsPaneComponent,
   ],
   animations: [
     trigger('slideAnimation', [
+      // Slide in from right
       transition(':enter', [
-        style({ transform: 'translateX(100%)', position: 'absolute' }),
-        animate('300ms ease-out', style({ transform: 'translateX(0)' }))
+        style({
+          transform: 'translateX(100%)',
+          position: 'absolute',
+          width: '100%',
+        }),
+        animate('300ms ease-out', style({ transform: 'translateX(0)' })),
       ]),
+      // Slide out to right
       transition(':leave', [
-        animate('300ms ease-in', style({ transform: 'translateX(100%)' }))
-      ])
-    ])
+        style({ position: 'absolute', width: '100%' }),
+        animate('300ms ease-in', style({ transform: 'translateX(100%)' })),
+      ]),
+    ]),
   ],
   templateUrl: './search-form.component.html',
   styleUrl: './search-form.component.css',
@@ -60,23 +83,28 @@ export class SearchFormComponent implements OnInit {
   error: string | null = null;
   activeTab: 'results' | 'favorites' = 'results';
   showResults = false;
-  currentLocation: { city: string; state: string } | null = null;
+  currentLocation: LocationInfo | null = null;
   @Output() daySelected = new EventEmitter<any>();
   @Output() locationChange = new EventEmitter<any>();
   day: any;
   showDetails = false;
   selectedDayDetails: any = null;
- // Update the onDaySelected method
-onDaySelected(selectedDay: any): void {
-  this.selectedDayDetails = selectedDay;
-  this.showDetails = true;
-}
+  processedData: ProcessedData = {
+    hourly: [],
+  };
+  meteogramData: MeteogramDataPoint[] = [];
 
-// Add this method
-onBackToList() {
-  this.showDetails = false;
-  this.selectedDayDetails = null;
-}
+  // Update the onDaySelected method
+  onDaySelected(selectedDay: any): void {
+    this.selectedDayDetails = selectedDay;
+    this.showDetails = true;
+  }
+
+  // Add this method
+  onBackToList() {
+    this.showDetails = false;
+    this.selectedDayDetails = null;
+  }
 
   // Add to existing properties
   currentView: 'day' | 'temp' | 'meteogram' = 'day';
@@ -199,8 +227,6 @@ onBackToList() {
 
   onOptionSelected = (event: MatAutocompleteSelectedEvent): void => {
     const prediction = event.option.value;
-    console.log('Option selected:', prediction);
-
     if (prediction && prediction.city) {
       this.searchForm.patchValue({
         city: prediction.city,
@@ -233,6 +259,12 @@ onBackToList() {
     }
   }
 
+  private fetchMeteogramData(lat: number | string, lon: number | string) {
+    return this.http.get<any[]>('http://localhost:3000/api/meteogram-data', {
+      params: { lat: lat.toString(), lon: lon.toString() },
+    });
+  }
+
   private filterCurrentAndFutureDates(intervals: any[]): any[] {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -257,6 +289,18 @@ onBackToList() {
       .slice(0, 7);
   }
 
+  public transformWeatherData(intervals: any[]): any[] {
+    return intervals.map((interval) => ({
+      time: new Date(interval.startTime).getTime(),
+      temp:
+        (interval.values.temperatureMax + interval.values.temperatureMin) / 2, // Using average temp
+      humidity: interval.values.humidity,
+      pressure: interval.values.pressureSurfaceLevel,
+      windSpeed: interval.values.windSpeed,
+      windDirection: 0, // Add this if you have wind direction data
+    }));
+  }
+
   // Update your fetchWeatherUsingCurrentLocation method
   fetchWeatherUsingCurrentLocation(): void {
     this.isLoading = true;
@@ -264,22 +308,38 @@ onBackToList() {
 
     this.http
       .get<WeatherResponse>('http://localhost:3000/api/location-weather')
-      .subscribe({
-        next: (response) => {
-          console.log('Weather response:', response);
-
+      .pipe(
+        switchMap((response) => {
           const filteredIntervals = this.filterCurrentAndFutureDates(
             response.forecast.data.timelines[0].intervals
           );
           this.weatherData = filteredIntervals;
           this.currentLocation = {
+            street: '',
             city: response.location.city,
             state: response.location.state,
+            lat: response.location.lat,
+            lon: response.location.lon,
           };
+
+          // Fetch meteogram data
+          return this.fetchMeteogramData(
+            response.location.lat,
+            response.location.lon
+          );
+        })
+      )
+      .subscribe({
+        next: (meteogramData) => {
+          this.meteogramData = meteogramData;
           this.locationChange.emit({
-            city: response.location.city,
-            state: response.location.state,
-            weatherData: filteredIntervals
+            street: '',
+            city: this.currentLocation?.city,
+            state: this.currentLocation?.state,
+            lat: this.currentLocation?.lat,
+            lon: this.currentLocation?.lon,
+            weatherData: this.weatherData,
+            meteogramData: meteogramData,
           });
           this.isLoading = false;
           this.activeTab = 'results';
@@ -304,7 +364,7 @@ onBackToList() {
     this.error = null;
 
     const params = {
-      street: this.searchForm.get('street')?.value,
+      street: this.searchForm.get('street')?.value || '',
       city: this.searchForm.get('city')?.value,
       state: this.searchForm.get('state')?.value,
     };
@@ -313,21 +373,38 @@ onBackToList() {
       .get<WeatherResponse>('http://localhost:3000/api/address-weather', {
         params,
       })
-      .subscribe({
-        next: (response) => {
+      .pipe(
+        switchMap((response) => {
           const filteredIntervals = this.filterCurrentAndFutureDates(
             response.forecast.data.timelines[0].intervals
           );
           this.weatherData = filteredIntervals;
           this.currentLocation = {
+            street: params.street,
             city: params.city,
             state: params.state,
+            lat: response.location.lat,
+            lon: response.location.lon,
           };
+
+          // Fetch meteogram data
+          return this.fetchMeteogramData(
+            response.location.lat,
+            response.location.lon
+          );
+        })
+      )
+      .subscribe({
+        next: (meteogramData) => {
+          this.meteogramData = meteogramData;
           this.locationChange.emit({
             street: params.street,
             city: params.city,
             state: params.state,
-            weatherData: filteredIntervals
+            lat: this.currentLocation?.lat,
+            lon: this.currentLocation?.lon,
+            weatherData: this.weatherData,
+            meteogramData: meteogramData,
           });
           this.isLoading = false;
           this.activeTab = 'results';

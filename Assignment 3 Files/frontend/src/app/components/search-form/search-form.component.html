@@ -178,132 +178,139 @@
   <!-- Results Section -->
   @if (weatherData && showResults && activeTab === 'results') {
   <div class="mt-4">
-    
-
     <div class="weather-content-wrapper position-relative">
-      @if (!showDetails) {
+      <div *ngIf="!showDetails" [@slideAnimation]>
+        <!-- @if (!showDetails) { -->
         <div class="mb-3">
-          <h3 class="mb-0 text-center" style="font-size: 1.5rem; font-weight: bold">
-            Forecast at {{ currentLocation?.city }}, {{ currentLocation?.state }}
+          <h3
+            class="mb-0 text-center"
+            style="font-size: 1.5rem; font-weight: bold"
+          >
+            Forecast at {{ currentLocation?.city }},
+            {{ currentLocation?.state }}
           </h3>
         </div>
-      <!-- Main View -->
-      <div class="weather-main-view">
-        <!-- Details and Navigation -->
-        <div
-          class="d-flex justify-content-end align-items-center gap-2 mt-2 mb-3"
-        >
-          <i
-            class="bi bi-star-fill"
-            style="color: #f0ce0d; cursor: pointer; font-size: 1.2rem"
-          ></i>
-          <button class="btn btn-link" (click)="onDaySelected(weatherData[0])">
-            Details
-            <span class="material-icons">navigate_next</span>
-          </button>
-          
-        </div>
+        <!-- Main View -->
+        <div class="weather-main-view">
+          <!-- Details and Navigation -->
+          <div
+            class="d-flex justify-content-end align-items-center gap-2 mt-2 mb-3"
+          >
+            <i
+              class="bi bi-star-fill"
+              style="color: #f0ce0d; cursor: pointer; font-size: 1.2rem"
+            ></i>
+            <button
+              class="btn btn-link"
+              (click)="onDaySelected(weatherData[0])"
+            >
+              Details
+              <span class="material-icons">navigate_next</span>
+            </button>
+          </div>
 
-        <!-- Tabs -->
-        <div class="row">
-          <div class="col-12">
-            <ul class="nav nav-tabs d-flex justify-content-end">
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  [class.active]="currentView === 'day'"
-                  (click)="switchView('day')"
-                  style="cursor: pointer"
-                  >Day View</a
-                >
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  [class.active]="currentView === 'temp'"
-                  (click)="switchView('temp')"
-                  style="cursor: pointer"
-                  >Daily Temp. Chart</a
-                >
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  [class.active]="currentView === 'meteogram'"
-                  (click)="switchView('meteogram')"
-                  style="cursor: pointer"
-                  >Meteogram</a
-                >
-              </li>
-            </ul>
+          <!-- Tabs -->
+          <div class="row">
+            <div class="col-12">
+              <ul class="nav nav-tabs d-flex justify-content-end">
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    [class.active]="currentView === 'day'"
+                    (click)="switchView('day')"
+                    style="cursor: pointer"
+                    >Day View</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    [class.active]="currentView === 'temp'"
+                    (click)="switchView('temp')"
+                    style="cursor: pointer"
+                    >Daily Temp. Chart</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    [class.active]="currentView === 'meteogram'"
+                    (click)="switchView('meteogram')"
+                    style="cursor: pointer"
+                    >Meteogram</a
+                  >
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
 
-        <!-- Content Area -->
-        <div class="mt-3">
-          @if (currentView === 'day') {
-          <div class="table-responsive">
-            <table class="table">
-              <thead>
-                <tr style="font-weight: bold">
-                  <th>#</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                  <th>Temp. High(°F)</th>
-                  <th>Temp. Low(°F)</th>
-                  <th>Wind Speed(mph)</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (day of weatherData; track day.startTime; let i = $index) {
-                <tr style="cursor: pointer" (click)="onDaySelected(day)">
-                  <td style="font-weight: bold">{{ i + 1 }}</td>
-                  <td>{{ day.startTime | date : "fullDate" }}</td>
-                  <td class="text-start">
-                    <div class="d-flex align-items-center">
-                      <img
-                        [src]="
-                          'assets/weather-icons/' +
-                          getWeatherIcon(day.values.weatherCode)
-                        "
-                        [alt]="getWeatherDescription(day.values.weatherCode)"
-                        class="weather-icon me-2"
-                        width="24"
-                        height="24"
-                      />
-                      {{ getWeatherDescription(day.values.weatherCode) }}
-                    </div>
-                  </td>
-                  <td>{{ day.values.temperatureMax | number : "1.0-1" }}</td>
-                  <td>{{ day.values.temperatureMin | number : "1.0-1" }}</td>
-                  <td>{{ day.values.windSpeed | number : "1.0-1" }}</td>
-                </tr>
-                }
-              </tbody>
-            </table>
+          <!-- Content Area -->
+          <div class="mt-3">
+            @if (currentView === 'day') {
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr style="font-weight: bold">
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Temp. High(°F)</th>
+                    <th>Temp. Low(°F)</th>
+                    <th>Wind Speed(mph)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (day of weatherData; track day.startTime; let i = $index)
+                  {
+                  <tr style="cursor: pointer" (click)="onDaySelected(day)">
+                    <td style="font-weight: bold">{{ i + 1 }}</td>
+                    <td>{{ day.startTime | date : "fullDate" }}</td>
+                    <td class="text-start">
+                      <div class="d-flex align-items-center">
+                        <img
+                          [src]="
+                            'assets/weather-icons/' +
+                            getWeatherIcon(day.values.weatherCode)
+                          "
+                          [alt]="getWeatherDescription(day.values.weatherCode)"
+                          class="weather-icon me-2"
+                          width="24"
+                          height="24"
+                        />
+                        {{ getWeatherDescription(day.values.weatherCode) }}
+                      </div>
+                    </td>
+                    <td>{{ day.values.temperatureMax | number : "1.0-1" }}</td>
+                    <td>{{ day.values.temperatureMin | number : "1.0-1" }}</td>
+                    <td>{{ day.values.windSpeed | number : "1.0-1" }}</td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+            } @if (currentView === 'temp') {
+            <app-daily-temp-chart
+              [weatherData]="weatherData"
+            ></app-daily-temp-chart>
+            } @if (currentView === 'meteogram') {
+            <app-meteogram
+              [weatherData]="meteogramData"
+              [location]="currentLocation"
+            >
+            </app-meteogram>
+            }
           </div>
-          } @if (currentView === 'temp') {
-          <div class="text-center">
-            <app-daily-temp-chart></app-daily-temp-chart>
-          </div>
-          } @if (currentView === 'meteogram') {
-          <div class="text-center">
-            <app-meteogram></app-meteogram>
-          </div>
-          }
         </div>
       </div>
-      }
 
       <!-- Details Pane -->
-      @if (showDetails) {
-      <div class="details-pane" [@slideAnimation]>
+      <div *ngIf="showDetails" [@slideAnimation]>
         <app-details-pane
           [weatherDetails]="selectedDayDetails"
+          [locationInfo]="currentLocation"
           (back)="onBackToList()"
         ></app-details-pane>
       </div>
-      }
     </div>
   </div>
   }

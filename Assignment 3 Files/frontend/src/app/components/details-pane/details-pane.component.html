@@ -9,9 +9,10 @@
         List
       </button>
       <h2 class="mb-0 date-text">
-        {{ weatherDetails?.startTime | date : "fullDate" }}
+        
+        {{ weatherDetails?.startTime | date : 'EEEE, MMM. d, y' }}
       </h2>
-      <button class="btn btn-outline-secondary tweet-btn" (click)="getTweetUrl()" target="_blank">
+      <button class="btn btn-outline-secondary tweet-btn" (click)="getTweetUrl()">
         <i class="bi bi-twitter-x"></i>
       </button>
     </div>
@@ -20,7 +21,7 @@
         <tbody>
           <tr>
             <td>Status</td>
-            <td>{{ weatherDetails?.values?.weatherCode }}</td>
+            <td>{{ getWeatherDescription(weatherDetails?.values?.weatherCode) }}</td>
           </tr>
           <tr>
             <td>Max Temperature</td>
@@ -31,11 +32,38 @@
             <td>{{ weatherDetails?.values?.temperatureMin }}°F</td>
           </tr>
           <tr>
+            <td>Apparent Temperature</td>
+            <td>{{ weatherDetails?.values?.temperatureApparent }}°F</td>
+          </tr>
+          <tr>
+            <td>Sun Rise Time</td>
+            <td>{{ formatTime(weatherDetails?.values?.sunriseTime) }}</td>
+          </tr>
+          <tr>
+            <td>Sun Set Time</td>
+            <td>{{ formatTime(weatherDetails?.values?.sunsetTime) }}</td>
+          </tr>
+          <tr>
+            <td>Humidity</td>
+            <td>{{ formatPercent(weatherDetails?.values?.humidity) }}</td>
+          </tr>
+          <tr>
             <td>Wind Speed</td>
             <td>{{ weatherDetails?.values?.windSpeed }}mph</td>
           </tr>
+          <tr>
+            <td>Visibility</td>
+            <td>{{ weatherDetails?.values?.visibility }}mi</td>
+          </tr>
+          <tr>
+            <td>Cloud Cover</td>
+            <td>{{ weatherDetails?.values?.cloudCover }}%</td>
+          </tr>
         </tbody>
       </table>
+    </div>
+    <div class="map-container">
+      <div id="map"></div>
     </div>
   </div>
 </div>

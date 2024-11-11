@@ -1,4 +1,14 @@
-<div class="text-center mt-3">
-    <h4>Meteogram</h4>
-    <p>Meteogram chart will be implemented here</p>
-  </div>
+<div class="meteogram-container">
+  @if (isBrowser && weatherData?.length) {
+    <highcharts-chart
+      [Highcharts]="Highcharts"
+      [options]="chartOptions"
+      [callbackFunction]="chartCallback"
+      style="width: 100%; min-width: 800px; height: 480px; display: block;">
+    </highcharts-chart>
+  } @else {
+    <div class="loading-placeholder">
+      Loading weather chart...
+    </div>
+  }
+</div>

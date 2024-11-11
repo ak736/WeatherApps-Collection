@@ -48,7 +48,6 @@ app.get('/api/places/autocomplete', async (req, res) => {
 async function getWeatherData(lat, lon) {
   try {
     const tomorrowApiKey = process.env.TOMORROW_API_KEY
-    console.log('Making request to Tomorrow.io API...')
     const startTime = new Date()
     startTime.setHours(0, 0, 0, 0)
     const url = 'https://api.tomorrow.io/v4/weather/forecast'
@@ -76,7 +75,7 @@ async function getWeatherData(lat, lon) {
           'windDirection',
           'uvIndex',
         ],
-        timesteps: ['1d', '1h'],
+        timesteps: ['1h', '1d'],
         startTime: startTime.toISOString(),
         endTime: getEndTime(startTime, 7).toISOString(),
         units: 'imperial',
@@ -94,8 +93,21 @@ async function getWeatherData(lat, lon) {
               values: {
                 temperatureMax: day.values.temperatureMax,
                 temperatureMin: day.values.temperatureMin,
-                windSpeed: day.values.windSpeedMin,
+                temperatureApparent:
+                  day.values.temperatureApparentAvg ||
+                  day.values.temperatureApparentMin,
+                windSpeed: day.values.windSpeedAvg,
                 weatherCode: day.values.weatherCodeMin,
+                sunriseTime: day.values.sunriseTime,
+                sunsetTime: day.values.sunsetTime,
+                humidity: day.values.humidityAvg || day.values.humidityMin,
+                visibility:
+                  day.values.visibilityAvg || day.values.visibilityMin,
+                cloudCover:
+                  day.values.cloudCoverAvg || day.values.cloudCoverMin,
+                pressureSurfaceLevel:
+                  day.values.pressureSurfaceLevelAvg ||
+                  day.values.pressureSurfaceLevel,
               },
             })),
           },
@@ -107,6 +119,89 @@ async function getWeatherData(lat, lon) {
     throw error
   }
 }
+
+// In server.js, modify the getMeteogramData function and endpoint:
+// In server.js, update the getMeteogramData function:
+async function getMeteogramData(lat, lon) {
+  try {
+    const tomorrowApiKey = process.env.TOMORROW_API_KEY;
+    const startTime = new Date();
+    startTime.setHours(0, 0, 0, 0);
+    const url = 'https://api.tomorrow.io/v4/weather/forecast';
+    
+    const response = await axios.get(url, {
+      headers: {
+        Accept: 'application/json',
+      },
+      params: {
+        location: `${lat},${lon}`,
+        fields: [
+          'temperature',
+          'humidity',
+          'pressureSurfaceLevel',
+          'windSpeed',
+          'windDirection'
+        ],
+        timesteps: ['1h'],
+        startTime: startTime.toISOString(),
+        endTime: getEndTime(startTime, 5).toISOString(),
+        units: 'imperial',
+        apikey: tomorrowApiKey,
+      },
+    });
+
+
+    // Check for hourly data in the response
+    if (!response.data?.timelines?.hourly) {
+      throw new Error('No hourly data found in API response');
+    }
+
+    const meteogramData = response.data.timelines.hourly.map(hour => ({
+      time: hour.time,
+      values: {
+        temperature: hour.values.temperature,
+        humidity: hour.values.humidity,
+        pressure: hour.values.pressureSurfaceLevel,
+        windSpeed: hour.values.windSpeed,
+        windDirection: hour.values.windDirection || 0
+      }
+    }));
+
+    return meteogramData;
+
+  } catch (error) {
+    console.error('Detailed error in getMeteogramData:', {
+      message: error.message,
+      stack: error.stack,
+      response: error.response?.data
+    });
+    throw error;
+  }
+}
+
+app.get('/api/meteogram-data', async (req, res) => {
+  try {
+    const { lat, lon } = req.query;
+    
+    if (!lat || !lon) {
+      return res.status(400).json({ error: 'Latitude and longitude are required' });
+    }
+
+    const meteogramData = await getMeteogramData(parseFloat(lat), parseFloat(lon));
+    res.json(meteogramData);
+  } catch (error) {
+    console.error('Full error details:', {
+      message: error.message,
+      stack: error.stack,
+      response: error.response?.data
+    });
+    res.status(500).json({ 
+      error: 'Failed to fetch meteogram data', 
+      details: error.message,
+      apiError: error.response?.data 
+    });
+  }
+});
 
 // Current location weather endpoint
 app.get('/api/location-weather', async (req, res) => {
@@ -122,10 +217,11 @@ app.get('/api/location-weather', async (req, res) => {
 
     res.json({
       location: {
+        street: '',
         city: location.city,
         state: location.region,
-        lat,
-        lon,
+        lat: parseFloat(lat),
+        lon: parseFloat(lon),
       },
       forecast: weatherData, // This will include the data property
     })
@@ -167,6 +263,7 @@ app.get('/api/address-weather', async (req, res) => {
 
     res.json({
       location: {
+        street: street || '',
         city,
         state,
         lat: location.lat,

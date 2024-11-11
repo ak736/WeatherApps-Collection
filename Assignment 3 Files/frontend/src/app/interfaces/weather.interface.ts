@@ -2,23 +2,37 @@ export interface WeatherResponse {
   location: {
     city: string;
     state: string;
-    lat: string;
-    lon: string;
+    lat: string | number;
+    lon: string | number;
+    street?: string;
   };
   forecast: {
     data: {
-      timelines: {
+      timelines: Array<{
         intervals: Array<{
           startTime: string;
           values: {
-            temperature: number;
             temperatureMax: number;
             temperatureMin: number;
-            weatherCode: number;
-            windSpeed: number;
+            temperatureApparent?: number;
+            windSpeed?: number;
+            weatherCode?: number;
+            sunriseTime?: string;
+            sunsetTime?: string;
+            humidity?: number;
+            visibility?: number;
+            cloudCover?: number;
           };
         }>;
-      }[];
+      }>;
     };
   };
+}
+
+export interface LocationInfo {
+  street?: string;
+  city?: string;
+  state?: string;
+  lat?: number | string;
+  lon?: number | string;
 }

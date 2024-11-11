@@ -102,6 +102,11 @@
 }
 
 /* Add or update these styles */
+
+.weather-content-wrapper > div {
+  width: 100%;
+  background: white;  /* or your desired background color */
+}
 .weather-content-wrapper {
   position: relative;
   min-height: 400px;
@@ -176,6 +181,7 @@ img.weather-icon {
 .invalid-feedback {
   display: block;
 }
+
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
