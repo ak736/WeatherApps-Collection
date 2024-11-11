@@ -45,11 +45,6 @@ export class MeteogramComponent implements OnInit, OnChanges {
   }
 
   get shouldShowChart(): boolean {
-    console.log('Checking shouldShowChart:', {
-      isBrowser: this.isBrowser,
-      hasData: Array.isArray(this.weatherData),
-      dataLength: this.weatherData?.length
-    });
     return this.isBrowser && Array.isArray(this.weatherData) && this.weatherData.length > 0;
   }
 
