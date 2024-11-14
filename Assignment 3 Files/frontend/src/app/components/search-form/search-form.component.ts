@@ -12,8 +12,13 @@ import {
 } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { Observable, of } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, finalize, take } from 'rxjs/operators';
+import { Observable, of, forkJoin } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  switchMap,
+  finalize,
+} from 'rxjs/operators';
 import { GooglePlacesService } from '../../services/google-places.service';
 import { PlacePrediction } from '../../interfaces/place-prediction.interface';
 import { WeatherUtilsService } from '../../services/weather-utils.service';
@@ -24,12 +29,15 @@ import { MeteogramComponent } from '../meteogram/meteogram.component';
 import { DetailsPaneComponent } from '../details-pane/details-pane.component';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { LocationInfo } from '../../interfaces/weather.interface'; // Add this import
-import { FavoritesService } from '../../services/favourites.service'; 
-import { FavoritesTableComponent } from '../favorites-table/favorites-table.component';  // Add this import
+import { FavoritesService } from '../../services/favourites.service';
+import { FavoritesTableComponent } from '../favorites-table/favorites-table.component'; // Add this import
+import { environment } from '../../../environments/environment';
+import { LocationService } from '../../services/location.service';
+import { WeatherService } from '../../services/weather.service';
+import { tap } from 'rxjs/operators';
 
 interface ProcessedData {
   hourly: any[];
-  // Add other properties if needed
 }
 
 interface MeteogramDataPoint {
@@ -40,6 +48,7 @@ interface MeteogramDataPoint {
     pressure: number;
     windSpeed: number;
     windDirection: number;
+    
   };
 }
 type TabType = 'results' | 'favorites';
@@ -56,7 +65,7 @@ type TabType = 'results' | 'favorites';
     DailyTempChartComponent,
     MeteogramComponent,
     DetailsPaneComponent,
-    FavoritesTableComponent
+    FavoritesTableComponent,
   ],
   animations: [
     trigger('slideAnimation', [
@@ -86,13 +95,15 @@ export class SearchFormComponent implements OnInit {
   isLoading = false;
   error: string | null = null;
   isFavorite = false;
-  activeTab: TabType = 'results';  // Initialize with type safety
+  activeTab: TabType = 'results'; // Initialize with type safety
   loadingProgress = 75;
   private progressInterval: any;
-  
-  
-  switchTab(tab: TabType) {  // Type-safe parameter
+  private apiUrl = environment.apiUrl;
+
+  switchTab(tab: TabType) {
+    // Type-safe parameter
     this.activeTab = tab;
+    this.error = null;
   }
   showResults = false;
   currentLocation: LocationInfo | null = null;
@@ -116,6 +127,7 @@ export class SearchFormComponent implements OnInit {
   onBackToList() {
     this.showDetails = false;
     this.selectedDayDetails = null;
+    this.currentView = 'day';
   }
 
   // Add to existing properties
@@ -187,10 +199,11 @@ export class SearchFormComponent implements OnInit {
     private http: HttpClient,
     private weatherUtils: WeatherUtilsService,
     private favoritesService: FavoritesService,
+    private locationService: LocationService,
+    private weatherService: WeatherService
   ) {
     this.initForm();
   }
- 
 
   addToFavorites() {
     if (this.currentLocation) {
@@ -246,14 +259,14 @@ export class SearchFormComponent implements OnInit {
   // Add this method to check favorite status
   private checkIfFavorite(): void {
     if (this.currentLocation) {
-      this.favoritesService.isFavorite(
-        this.currentLocation.city,
-        this.currentLocation.state
-      ).subscribe({
-        next: (isFav: boolean) => {  // Add type annotation here
-          this.isFavorite = isFav;
-        }
-      });
+      this.favoritesService
+        .isFavorite(this.currentLocation.city, this.currentLocation.state)
+        .subscribe({
+          next: (isFav: boolean) => {
+            // Add type annotation here
+            this.isFavorite = isFav;
+          },
+        });
     }
   }
   displayFn = (prediction: any): string => {
@@ -279,7 +292,7 @@ export class SearchFormComponent implements OnInit {
     ) {
       return;
     }
-
+    this.currentView = 'day';
     this.handleLoadingState(true);
     this.error = null;
     this.showResults = true; // Set this to true when search is clicked
@@ -292,7 +305,7 @@ export class SearchFormComponent implements OnInit {
   }
 
   private fetchMeteogramData(lat: number | string, lon: number | string) {
-    return this.http.get<any[]>('http://localhost:3000/api/meteogram-data', {
+    return this.http.get<any[]>(`${this.apiUrl}/meteogram-data`, {
       params: { lat: lat.toString(), lon: lon.toString() },
     });
   }
@@ -333,7 +346,7 @@ export class SearchFormComponent implements OnInit {
       await Promise.resolve();
       return;
     }
-    
+
     this.isLoading = true;
     this.loadingProgress = 0;
     this.simulateProgress();
@@ -344,7 +357,7 @@ export class SearchFormComponent implements OnInit {
     if (this.progressInterval) {
       clearInterval(this.progressInterval);
     }
-    
+
     this.progressInterval = setInterval(() => {
       if (this.isLoading && this.loadingProgress < 90) {
         this.loadingProgress += 15;
@@ -361,7 +374,6 @@ export class SearchFormComponent implements OnInit {
     }
   }
 
-
   public transformWeatherData(intervals: any[]): any[] {
     return intervals.map((interval) => ({
       time: new Date(interval.startTime).getTime(),
@@ -374,66 +386,91 @@ export class SearchFormComponent implements OnInit {
     }));
   }
 
-  // Update your fetchWeatherUsingCurrentLocation method
+
   fetchWeatherUsingCurrentLocation(): void {
     this.handleLoadingState(true);
     this.error = null;
 
-    this.http
-      .get<WeatherResponse>('http://localhost:3000/api/location-weather')
-      .pipe(
-        take(1),
-        switchMap((response) => {
-          if (!response?.forecast?.data?.timelines?.[0]?.intervals) {
-            throw new Error('Unable to fetch weather data for current location');
-          }
-          const filteredIntervals = this.filterCurrentAndFutureDates(
-            response.forecast.data.timelines[0].intervals
-          );
-          if (!filteredIntervals.length) {
-            throw new Error('No weather data available for current location');
-          }
-          this.weatherData = filteredIntervals;
-          this.currentLocation = {
-            street: '',
-            city: response.location.city,
-            state: response.location.state,
-            lat: Number(response.location.lat), // Convert to number
-          lon: Number(response.location.lon)  // Convert to number
-          };
+    this.locationService.getCurrentLocation().pipe(
+      switchMap(location => {
+        this.currentLocation = location;
+        return this.weatherService.getAddressWeather(location);
+      }),
+      switchMap(weatherResponse => {
+        if (!weatherResponse?.forecast?.data?.timelines?.[0]?.intervals) {
+          throw new Error('Invalid address or no weather data available');
+        }
 
-          // Fetch meteogram data
-          return this.fetchMeteogramData(
-            Number(response.location.lat),
-            Number(response.location.lon)
-          ).pipe(take(1));
-        }),
-        finalize(() => {
-          this.handleLoadingState(false); // This ensures loading state is always cleared
-        })
-      )
-      .subscribe({
-        next: (meteogramData) => {
-          this.meteogramData = meteogramData;
-          this.locationChange.emit({
-            street: '',
-            city: this.currentLocation?.city,
-            state: this.currentLocation?.state,
-            lat: this.currentLocation?.lat,
-            lon: this.currentLocation?.lon,
-            weatherData: this.weatherData,
-            meteogramData: meteogramData,
-          });
-          this.handleLoadingState(false);
-          this.activeTab = 'results';
-          this.checkIfFavorite();
-        },
-        error: (error) => {
-          console.error('Error:', error);
-          this.error = error.message || 'An error occurred. Please try again later.';
-          // this.handleLoadingState(false);
-        },
-      });
+        this.weatherData = this.filterCurrentAndFutureDates(
+          weatherResponse.forecast.data.timelines[0].intervals
+        );
+
+        return this.weatherService.getMeteogramData(
+          Number(this.currentLocation!.lat),
+          Number(this.currentLocation!.lon)
+        );
+      }),
+      tap(meteogramData => {
+        this.meteogramData = meteogramData;
+        this.locationChange.emit({
+          street: this.currentLocation!.street,
+          city: this.currentLocation!.city,
+          state: this.currentLocation!.state,
+          lat: this.currentLocation!.lat,
+          lon: this.currentLocation!.lon,
+          weatherData: this.weatherData,
+          meteogramData: this.meteogramData
+        });
+        this.activeTab = 'results';
+        this.checkIfFavorite();
+      }),
+      finalize(() => {
+        this.handleLoadingState(false);
+      })
+    ).subscribe({
+      next: () => {
+        // All operations completed successfully
+      },
+      error: (error) => {
+        console.error('Error:', error);
+        this.error = error.status === 429
+          ? 'Service is busy. Please try again later.'
+          : error.error?.error || 'Failed to get weather data. Please try again.';
+      }
+    });
+  }
+
+  // Add this method to your SearchFormComponent class
+  onLocationChange(data: any) {
+    if (data.error) {
+      // If there's an error, switch to results tab and show error
+      this.activeTab = 'results';
+      this.error = data.error;
+      this.showResults = false;
+      this.weatherData = null;
+      this.currentLocation = null;
+      return;
+    }
+
+    // Update component state
+    this.weatherData = data.weatherData;
+    this.meteogramData = data.meteogramData;
+    this.currentLocation = {
+      street: data.street || '',
+      city: data.city,
+      state: data.state,
+      lat: data.lat || data.location?.lat,
+      lon: data.lon || data.location?.lon,
+    };
+
+    // Update UI state
+    this.showResults = true;
+    this.activeTab = 'results';
+    this.currentView = 'day';
+    this.error = null;
+
+    // Check favorite status
+    this.checkIfFavorite();
   }
 
   // Update your fetchWeatherUsingAddress method
@@ -452,7 +489,7 @@ export class SearchFormComponent implements OnInit {
     };
 
     this.http
-      .get<WeatherResponse>('http://localhost:3000/api/address-weather', {
+      .get<WeatherResponse>(`${this.apiUrl}/address-weather`, {
         params,
       })
       .pipe(
@@ -466,20 +503,20 @@ export class SearchFormComponent implements OnInit {
           if (!filteredIntervals.length) {
             throw new Error('No weather data available for this location');
           }
-          
+
           this.weatherData = filteredIntervals;
           this.currentLocation = {
             street: params.street,
             city: params.city,
             state: params.state,
             lat: Number(response.location.lat), // Convert to number
-            lon: Number(response.location.lon)
+            lon: Number(response.location.lon),
           };
 
           // Fetch meteogram data
           return this.fetchMeteogramData(
             Number(response.location.lat),
-          Number(response.location.lon)
+            Number(response.location.lon)
           );
         }),
         finalize(() => {
@@ -504,7 +541,13 @@ export class SearchFormComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error:', error);
-          this.error = error.message || 'An error occurred. Please try again later.';
+          if (error.status === 429) {
+            this.error = 'An error occurred please try again later';
+          } else {
+            this.error =
+              error.error?.error ||
+              'An error occurred. Please try again later.';
+          }
           this.handleLoadingState(false);
         },
       });
@@ -514,19 +557,17 @@ export class SearchFormComponent implements OnInit {
     if (!this.currentLocation) return;
 
     if (this.isFavorite) {
-      this.favoritesService.removeFavorite(
-        this.currentLocation.city,
-        this.currentLocation.state
-      ).subscribe(() => {
-        this.isFavorite = false;
-      });
+      this.favoritesService
+        .removeFavorite(this.currentLocation.city, this.currentLocation.state)
+        .subscribe(() => {
+          this.isFavorite = false;
+        });
     } else {
-      this.favoritesService.addFavorite(
-        this.currentLocation.city,
-        this.currentLocation.state
-      ).subscribe(() => {
-        this.isFavorite = true;
-      });
+      this.favoritesService
+        .addFavorite(this.currentLocation.city, this.currentLocation.state)
+        .subscribe(() => {
+          this.isFavorite = true;
+        });
     }
   }
 
@@ -538,5 +579,8 @@ export class SearchFormComponent implements OnInit {
     this.error = null;
     this.showResults = false; // Hide results when clearing
     this.currentLocation = null;
+    this.activeTab = 'results'; // Switch to results tab
+    this.currentView = 'day'; // Reset to day view
+    this.showDetails = false; // Hide details pane if it's open
   }
 }

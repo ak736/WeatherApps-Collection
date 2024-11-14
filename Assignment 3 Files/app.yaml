@@ -1,0 +1,38 @@
+runtime: nodejs18
+env: standard
+entrypoint: node backend/server.js
+
+handlers:
+  # API routes
+  - url: /api/.*
+    script: auto
+    secure: always
+
+  # Serve static assets
+  - url: /assets
+    static_dir: backend/dist/frontend/browser/assets
+    secure: always
+
+  # Serve all files in the root of the Angular app
+  - url: /(.+\..+)$
+    static_files: backend/dist/frontend/browser/\1
+    upload: backend/dist/frontend/browser/(.+\..+)$
+    secure: always
+
+  # All other routes should serve the Angular app
+  - url: /.*
+    static_files: backend/dist/frontend/browser/index.html
+    upload: backend/dist/frontend/browser/index.html
+    secure: always
+
+env_variables:
+  NODE_ENV: 'production'
+  TOMORROW_API_KEY: 'cru4n6ziOtDlPV3MzrGdqlGl6ckvCBFc'
+  GOOGLE_API_KEY: 'AIzaSyDRbrbp-TJ3XE2G_7aQl6Jlry965pQ38hc'
+  IP_INFO_TOKEN: 'a299ed4e40e3c5'
+  MONGODB_URI: 'mongodb+srv://aniketkir63:4CtyQURJMRzAaobN@weather-cluster.rctjc.mongodb.net/?retryWrites=true&w=majority&appName=Weather-Cluster'
+
+automatic_scaling:
+  target_cpu_utilization: 0.65
+  min_instances: 1
+  max_instances: 10

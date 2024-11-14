@@ -26,3 +26,20 @@
   .details-content.slide-in {
     transform: translateX(0);
   }
+
+  .tabs-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+  .btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #dee2e6;
+    background: none;
+    cursor: pointer;
+  }
+  .btn-primary {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+  }

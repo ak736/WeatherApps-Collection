@@ -21,7 +21,8 @@ declare global {
 export class DetailsPaneComponent implements OnInit {
   @Input() locationInfo!: LocationInfo | null;
   @Input() weatherDetails: any;
-  @Output() back = new EventEmitter<void>();
+  @Output() back = new EventEmitter<string>();
+  @Input() dayData: any = null;
   private map: any;
   private marker: any;
 

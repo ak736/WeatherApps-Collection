@@ -2,12 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, map, catchError, of } from 'rxjs';
 import { PlacePrediction } from '../interfaces/place-prediction.interface';
+import { environment } from '../../environments/environment';
+// import { environment } from '../../environments/environment.development';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class GooglePlacesService {
-  private apiUrl = 'http://localhost:3000';
+  private apiUrl = environment.apiUrl;
   private isAutocompleteEnabled = true;
 
   constructor(private http: HttpClient) { }
@@ -18,7 +21,7 @@ export class GooglePlacesService {
       return of([]);
     }
 
-    return this.http.get<any>(`${this.apiUrl}/api/places/autocomplete`, {
+    return this.http.get<any>(`${this.apiUrl}/places/autocomplete`, {
       params: {
         input: input.trim(),
         types: '(cities)' // Restrict to cities only

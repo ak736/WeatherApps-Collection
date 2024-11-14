@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, PLATFORM_ID, Inject } from '@angular/core';
+import { Component, Input, OnInit, PLATFORM_ID, Inject, Output, EventEmitter } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import * as Highcharts from 'highcharts';
@@ -26,6 +26,8 @@ export class DailyTempChartComponent implements OnInit {
   Highcharts: typeof Highcharts = Highcharts;
   chartOptions?: Highcharts.Options;
   isBrowser: boolean;
+  @Input() data: any[] = [];
+  @Output() daySelected = new EventEmitter<any>();
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.isBrowser = isPlatformBrowser(this.platformId);

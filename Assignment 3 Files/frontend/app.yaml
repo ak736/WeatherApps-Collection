@@ -1,0 +1,15 @@
+runtime: nodejs18
+service: frontend
+env: standard
+
+handlers:
+  - url: /(.*\.(gif|png|jpg|css|js|ico|json))$
+    static_files: dist/frontend/browser/\1
+    upload: dist/frontend/browser/.*\.(gif|png|jpg|css|js|ico|json)$
+
+  - url: /.*
+    static_files: dist/frontend/browser/index.html
+    upload: dist/frontend/browser/index.html
+
+env_variables:
+  NODE_ENV: "production"

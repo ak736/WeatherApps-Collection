@@ -4,12 +4,14 @@ import { CommonModule } from '@angular/common';
 import { SearchFormComponent } from './components/search-form/search-form.component';
 import { WeatherDetailsComponent } from './components/weather-details/weather-details.component';
 import { DetailsPaneComponent } from './components/details-pane/details-pane.component';
-
+import { WeatherService } from './services/weather.service';
+import { LocationInfo } from './interfaces/weather.interface';
+import { FavoritesTableComponent } from './components/favorites-table/favorites-table.component';
 // app.component.ts
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, SearchFormComponent, WeatherDetailsComponent, DetailsPaneComponent],
+  imports: [RouterOutlet, CommonModule, SearchFormComponent, WeatherDetailsComponent, DetailsPaneComponent, FavoritesTableComponent],
   template: `
     <div class="app-container">
       <app-search-form
@@ -39,6 +41,21 @@ export class AppComponent {
   selectedDay: any = null;
   locationDetails: any = null;
   weatherData: any = null;
+  activeTab = 'Favorites';
+  constructor(private weatherService: WeatherService) {}
+  handleLocationSearch(location: LocationInfo) {
+    // Switch to Results tab
+    this.activeTab = 'Results';
+    
+    // Trigger the weather search
+    this.weatherService.getAddressWeather(location).subscribe({
+      next: (response) => {
+        // Handle the weather data same way as your normal search
+        // Update your results display
+      },
+      error: (error) => console.error('Error loading weather:', error)
+    });
+  }
 
   onLocationChange(data: any) {
     console.log('Location data received:', data); // Debug log

@@ -1,0 +1,34 @@
+runtime: nodejs18
+env: standard
+entrypoint: node server.js
+
+handlers:
+  # API routes
+  - url: /api/.*
+    script: auto
+    secure: always
+
+  # Static files
+  - url: /(.*\.(gif|png|jpg|css|js|ico|json|svg))$
+    static_files: dist/frontend/browser/\1
+    upload: dist/frontend/browser/.*\.(gif|png|jpg|css|js|ico|json|svg)$
+    secure: always
+
+
+  # All other routes
+  - url: /.*
+    static_files: dist/frontend/browser/index.html
+    upload: dist/frontend/browser/index.html
+    secure: always
+
+env_variables:
+  NODE_ENV: 'production'
+  TOMORROW_API_KEY: 'l6dHGNEBnMpGCJdxKJZvCRGfFtz8Xug4'
+  GOOGLE_API_KEY: 'AIzaSyDRbrbp-TJ3XE2G_7aQl6Jlry965pQ38hc'
+  IP_INFO_TOKEN: 'a299ed4e40e3c5'
+  MONGODB_URI: 'mongodb+srv://aniketkir63:4CtyQURJMRzAaobN@weather-cluster.rctjc.mongodb.net/?retryWrites=true&w=majority&appName=Weather-Cluster'
+
+automatic_scaling:
+  target_cpu_utilization: 0.65
+  min_instances: 1
+  max_instances: 10

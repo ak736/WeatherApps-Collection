@@ -222,4 +222,8 @@ img.weather-icon {
     text-align: left;
     margin-bottom: 0.5rem;
   }
+  .table td, .table th {
+    padding: 0.5rem;
+    font-size: 0.7rem;
+  }
 }

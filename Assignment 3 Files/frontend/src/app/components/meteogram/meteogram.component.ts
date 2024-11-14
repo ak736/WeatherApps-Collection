@@ -35,6 +35,7 @@ if (typeof window !== 'undefined') {
 export class MeteogramComponent implements OnInit, OnChanges {
   @Input() weatherData: any[] = [];
   @Input() location: LocationInfo | null = null;
+  @Input() data: any[] = [];
   
   Highcharts: typeof Highcharts = Highcharts;
   meteogramOptions: Highcharts.Options = {};
