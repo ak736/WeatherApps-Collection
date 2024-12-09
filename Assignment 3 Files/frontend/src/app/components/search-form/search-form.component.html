@@ -220,14 +220,14 @@
           <div
             class="d-flex justify-content-end align-items-center icon-details-container gap-1 mt-2 mb-3"
           >
-            <span
-              class="material-icons"
-              [style.color]="isFavorite ? '#FFD700' : 'grey'"
-              (click)="toggleFavorite()"
-              style="cursor: pointer"
-            >
-              {{ isFavorite ? "star" : "star_border" }}
-            </span>
+            <div class="star-container" (click)="toggleFavorite()">
+              <span
+                class="material-icons"
+                [style.color]="isFavorite ? '#FFD700' : 'grey'"
+              >
+                {{ isFavorite ? "star" : "star_border" }}
+              </span>
+            </div>
             <button
               class="btn btn-link details-button"
               (click)="onDaySelected(weatherData[0])"
