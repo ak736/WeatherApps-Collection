@@ -1,0 +1,9 @@
+runtime: nodejs18
+env: standard
+entrypoint: node server.js
+
+env_variables:
+  TOMORROW_API_KEY: 'qM8nTPYKk5bP8yPmDoAIzHaW5gYdK7Jm'
+  GOOGLE_API_KEY: 'AIzaSyDRbrbp-TJ3XE2G_7aQl6Jlry965pQ38hc'
+  IP_INFO_TOKEN: 'a299ed4e40e3c5'
+  MONGODB_URI: 'mongodb+srv://aniketkir63:f7DondbyxT1TVfOu@weatherappfall2024.jwpre.mongodb.net/?retryWrites=true&w=majority&appName=WeatherAppFall2024'
